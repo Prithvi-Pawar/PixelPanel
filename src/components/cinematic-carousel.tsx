@@ -4,6 +4,7 @@ import type { Media } from '@/lib/types';
 import Image from 'next/image';
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
@@ -11,18 +12,69 @@ import {
 } from '@/components/ui/carousel';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { PlayCircle, Star, X } from 'lucide-react';
-import Link from 'next/link';
+import { PlayCircle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 import { MediaCard } from './media-card';
-import { useState } from 'react';
 
-function truncate(str: string, length: number) {
-  if (!str) return '';
-  return str.length > length ? str.substring(0, length) + '...' : str;
-}
+const AutoplayingBackground = ({ media, isActive }: { media: Media; isActive: boolean }) => {
+  const trailerId = media.trailer?.site === 'youtube' ? media.trailer.id : null;
+
+  return (
+    <div
+      className={cn(
+        'absolute inset-0 h-full w-full overflow-hidden transition-opacity duration-700',
+        isActive ? 'opacity-100' : 'opacity-0'
+      )}
+    >
+      {isActive && trailerId ? (
+        <iframe
+          key={media.id}
+          className="absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[1.75]"
+          src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}&playsinline=1`}
+          title={`${media.title.userPreferred} trailer`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen={false}
+        ></iframe>
+      ) : (
+        media.bannerImage && (
+          <Image
+            src={media.bannerImage}
+            alt={`Banner for ${media.title.userPreferred}`}
+            fill
+            className="object-cover"
+            priority={isActive}
+            sizes="100vw"
+            data-ai-hint="anime background"
+          />
+        )
+      )}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-lg" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
+    </div>
+  );
+};
+
 
 export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIME' | 'MANGA' }) {
-  const [showTrailer, setShowTrailer] = useState(true);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    
+    setCurrent(api.selectedScrollSnap());
+
+    const onSelect = () => {
+      setCurrent(api.selectedScrollSnap());
+    };
+
+    api.on('select', onSelect);
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api]);
+  
 
   if (!media || media.length === 0) {
     return (
@@ -32,87 +84,25 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
     );
   }
 
-  const featured = media[0];
-  const carouselItems = media.slice(1, 6);
-  const trailerId = type === 'ANIME' && featured.trailer?.id && featured.trailer.site === 'youtube' ? featured.trailer.id : null;
-
   return (
-    <div className="relative h-[70vh] w-full overflow-hidden">
-      {showTrailer && trailerId ? (
-        <iframe
-          className="absolute top-0 left-0 w-full h-full z-0"
-          src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}`}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        featured.bannerImage && (
-          <Image
-            src={featured.bannerImage}
-            alt={`Banner for ${featured.title.userPreferred}`}
-            fill
-            className="object-cover z-0"
-            data-ai-hint="anime background"
-            priority
-          />
-        )
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent z-10" />
-      <div className="absolute inset-0 backdrop-blur-sm z-10" />
-
-      <div className="container relative z-20 grid h-full grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center gap-8 text-white">
-        <div className="flex flex-col gap-4 md:col-span-2 lg:col-span-1 pt-16 md:pt-0">
-          <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-shadow">
-            {featured.title.userPreferred}
-          </h1>
-          <div className="flex items-center gap-4 flex-wrap">
-            {featured.averageScore && (
-              <div className="flex items-center gap-1 text-yellow-400">
-                <Star className="h-5 w-5 fill-current" />
-                <span className="text-lg font-bold">{featured.averageScore} / 100</span>
-              </div>
-            )}
-            <Badge variant="secondary" className="text-sm">{featured.format}</Badge>
-            <Badge variant="secondary" className="text-sm">{featured.status?.replace(/_/g, ' ')}</Badge>
-            {featured.startDate?.year && <Badge variant="secondary" className="text-sm">{featured.startDate.year}</Badge>}
+    <div className="relative w-full h-[80vh] min-h-[600px] flex flex-col justify-center items-center overflow-hidden">
+        {media.map((item, index) => (
+            <AutoplayingBackground key={item.id} media={item} isActive={index === current} />
+        ))}
+      
+        <Carousel setApi={setApi} opts={{ loop: true, align: 'center' }} className="w-full h-full relative z-10">
+          <CarouselContent className="-ml-12 h-full" style={{ perspective: '1000px' }}>
+            {media.map((item, index) => (
+              <CarouselItem key={item.id} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
+                  <MediaCard media={item} type={type.toLowerCase() as 'anime' | 'manga'} isActive={index === current}/>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <CarouselPrevious className="relative translate-x-[-5px] bg-black/20 border-white/20 hover:bg-white/20 hover:text-white" />
+            <CarouselNext className="relative translate-x-[5px] bg-black/20 border-white/20 hover:bg-white/20 hover:text-white" />
           </div>
-          <p className="text-foreground/80 text-base leading-relaxed max-w-prose">
-            {truncate(featured.description.replace(/<br>/g, ''), 250)}
-          </p>
-          <div className="flex items-center gap-4 mt-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
-              <Link href={`https://anilist.co/${type.toLowerCase()}/${featured.id}`} target="_blank" rel="noopener noreferrer">
-                Explore Now
-              </Link>
-            </Button>
-            {trailerId && (
-              <Button variant="outline" size="lg" onClick={() => setShowTrailer(!showTrailer)}>
-                {showTrailer ? <X className="mr-2 h-5 w-5" /> : <PlayCircle className="mr-2 h-5 w-5" />}
-                {showTrailer ? 'Close Trailer' : 'Play Trailer'}
-              </Button>
-            )}
-          </div>
-        </div>
-
-        <div className="hidden md:flex justify-center md:col-span-1 lg:col-span-1">
-          <Carousel
-            opts={{ align: 'start', loop: true }}
-            className="w-full max-w-xs"
-          >
-            <CarouselContent className="-ml-2">
-              {carouselItems.map((item) => (
-                <CarouselItem key={item.id} className="pl-2 basis-1/2 md:basis-1/2 lg:basis-1/3">
-                  <MediaCard media={item} variant="carousel" type={type.toLowerCase() as 'anime' | 'manga'} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
-        </div>
-      </div>
+        </Carousel>
     </div>
   );
 }
