@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/carousel';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { PlayCircle, Star } from 'lucide-react';
+import { PlayCircle, Star, X } from 'lucide-react';
 import Link from 'next/link';
 import { MediaCard } from './media-card';
-import { TrailerButton } from './trailer-button';
+import { useState } from 'react';
 
 function truncate(str: string, length: number) {
   if (!str) return '';
@@ -22,6 +22,8 @@ function truncate(str: string, length: number) {
 }
 
 export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIME' | 'MANGA' }) {
+  const [showTrailer, setShowTrailer] = useState(false);
+
   if (!media || media.length === 0) {
     return (
       <div className="h-[60vh] flex items-center justify-center bg-card">
@@ -32,18 +34,29 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
 
   const featured = media[0];
   const carouselItems = media.slice(1, 6);
+  const trailerId = type === 'ANIME' && featured.trailer?.id && featured.trailer.site === 'youtube' ? featured.trailer.id : null;
 
   return (
     <div className="relative h-[70vh] w-full overflow-hidden">
-      {featured.bannerImage && (
-        <Image
-          src={featured.bannerImage}
-          alt={`Banner for ${featured.title.userPreferred}`}
-          fill
-          className="object-cover"
-          data-ai-hint="anime background"
-          priority
-        />
+      {showTrailer && trailerId ? (
+        <iframe
+          className="absolute top-0 left-0 w-full h-full"
+          src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}`}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+      ) : (
+        featured.bannerImage && (
+          <Image
+            src={featured.bannerImage}
+            alt={`Banner for ${featured.title.userPreferred}`}
+            fill
+            className="object-cover"
+            data-ai-hint="anime background"
+            priority
+          />
+        )
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
@@ -74,8 +87,11 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
                 Explore Now
               </Link>
             </Button>
-            {type === 'ANIME' && featured.trailer?.id && featured.trailer.site === 'youtube' && (
-              <TrailerButton trailerId={featured.trailer.id} />
+            {trailerId && (
+              <Button variant="outline" size="lg" onClick={() => setShowTrailer(!showTrailer)}>
+                {showTrailer ? <X className="mr-2 h-5 w-5" /> : <PlayCircle className="mr-2 h-5 w-5" />}
+                {showTrailer ? 'Close Trailer' : 'Play Trailer'}
+              </Button>
             )}
           </div>
         </div>
