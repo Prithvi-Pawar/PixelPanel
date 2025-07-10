@@ -1,5 +1,5 @@
 import { getMediaList, getTrendingMedia } from '@/lib/anilist';
-import { CinematicCarousel } from './cinematic-carousel';
+import { Hero } from './hero';
 import { MediaGrid } from './media-grid';
 
 export async function MangaSection() {
@@ -11,7 +11,7 @@ export async function MangaSection() {
 
   return (
     <div className="flex flex-col">
-      <CinematicCarousel media={trendingManga} type="MANGA" />
+      <Hero trending={trendingManga} type="MANGA" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-12 py-12">
         <MediaGrid title="Recently Published Manga" media={recentManga} type="manga" />
         <MediaGrid title="Top Rated Manga" media={topManga} type="manga" />

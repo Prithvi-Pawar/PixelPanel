@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 function SectionSkeleton() {
   return (
     <div className="flex flex-col">
-      <Skeleton className="h-[60vh] w-full rounded-none" />
+      <Skeleton className="h-screen w-full rounded-none" />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-12 py-12">
         <div>
           <Skeleton className="h-8 w-48 mb-6" />
@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground">
       <Tabs defaultValue="anime" className="w-full flex flex-col">
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="fixed top-0 z-50 w-full border-b border-transparent bg-transparent supports-[backdrop-filter]:bg-transparent">
           <div className="container flex h-16 max-w-screen-2xl items-center">
             <Link href="/" className="mr-6 flex items-baseline space-x-2">
               <span className="font-black text-2xl text-white tracking-tighter">Panel</span>
@@ -49,8 +49,8 @@ export default function Home() {
             </Link>
             <div className="flex flex-1 items-center justify-end space-x-2">
               <TabsList className="bg-transparent p-0 h-auto">
-                <TabsTrigger value="anime" className="text-base font-medium transition-colors hover:text-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary data-[state=active]:shadow-none px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary bg-transparent">Anime</TabsTrigger>
-                <TabsTrigger value="manga" className="text-base font-medium transition-colors hover:text-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary data-[state=active]:shadow-none px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary bg-transparent">Manga</TabsTrigger>
+                <TabsTrigger value="anime" className="text-base font-medium transition-colors hover:text-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary data-[state=active]:shadow-none px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary bg-transparent text-white">Anime</TabsTrigger>
+                <TabsTrigger value="manga" className="text-base font-medium transition-colors hover:text-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary data-[state=active]:shadow-none px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary bg-transparent text-white">Manga</TabsTrigger>
               </TabsList>
             </div>
           </div>
