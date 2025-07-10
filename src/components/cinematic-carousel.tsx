@@ -10,9 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { PlayCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { MediaCard } from './media-card';

@@ -2,7 +2,6 @@ import type { Media } from '@/lib/types';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
 import { PlayCircle } from 'lucide-react';
 
 interface MediaCardProps {
@@ -57,14 +56,6 @@ export function MediaCard({ media, type, isActive }: MediaCardProps) {
                   {truncate(media.description, 100)}
                   <span className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-black/50 to-transparent" />
               </p>
-              {trailerId && (
-                <a href={`https://www.youtube.com/watch?v=${trailerId}`} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full bg-transparent border-white text-white hover:bg-white hover:text-black">
-                      <PlayCircle className="mr-2 h-4 w-4" />
-                      Watch Trailer
-                  </Button>
-                </a>
-              )}
           </div>
         </div>
       </div>
