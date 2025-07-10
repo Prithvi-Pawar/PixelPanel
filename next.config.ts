@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 's4.anilist.co',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
