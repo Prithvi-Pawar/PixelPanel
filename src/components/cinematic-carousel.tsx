@@ -26,7 +26,7 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
 
   if (!media || media.length === 0) {
     return (
-      <div className="h-[60vh] flex items-center justify-center bg-card">
+      <div className="h-[70vh] flex items-center justify-center bg-card">
         <p>Could not load trending content.</p>
       </div>
     );
@@ -40,8 +40,8 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
     <div className="relative h-[70vh] w-full overflow-hidden">
       {showTrailer && trailerId ? (
         <iframe
-          className="absolute top-0 left-0 w-full h-full"
-          src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}`}
+          className="absolute top-0 left-0 w-full h-full pointer-events-none"
+          src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
