@@ -22,7 +22,7 @@ function truncate(str: string, length: number) {
 }
 
 export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIME' | 'MANGA' }) {
-  const [showTrailer, setShowTrailer] = useState(false);
+  const [showTrailer, setShowTrailer] = useState(true);
 
   if (!media || media.length === 0) {
     return (
@@ -40,7 +40,7 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
     <div className="relative h-[70vh] w-full overflow-hidden">
       {showTrailer && trailerId ? (
         <iframe
-          className="absolute top-0 left-0 w-full h-full pointer-events-none"
+          className="absolute top-0 left-0 w-full h-full z-0"
           src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerId}`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -52,17 +52,17 @@ export function CinematicCarousel({ media, type }: { media: Media[]; type: 'ANIM
             src={featured.bannerImage}
             alt={`Banner for ${featured.title.userPreferred}`}
             fill
-            className="object-cover"
+            className="object-cover z-0"
             data-ai-hint="anime background"
             priority
           />
         )
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
-      <div className="absolute inset-0 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent z-10" />
+      <div className="absolute inset-0 backdrop-blur-sm z-10" />
 
-      <div className="container relative z-10 grid h-full grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center gap-8 text-white">
+      <div className="container relative z-20 grid h-full grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-center gap-8 text-white">
         <div className="flex flex-col gap-4 md:col-span-2 lg:col-span-1 pt-16 md:pt-0">
           <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-shadow">
             {featured.title.userPreferred}
