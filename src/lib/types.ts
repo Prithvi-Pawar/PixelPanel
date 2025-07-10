@@ -1,5 +1,10 @@
+export interface PageInfo {
+  hasNextPage: boolean;
+}
+
 export interface Page {
   media: Media[];
+  pageInfo: PageInfo;
 }
 
 export interface Media {
