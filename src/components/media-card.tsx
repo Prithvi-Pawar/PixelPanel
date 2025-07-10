@@ -1,9 +1,7 @@
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Badge } from './ui/badge';
 
 interface MediaCardProps {
   media: Media;
@@ -11,12 +9,11 @@ interface MediaCardProps {
   type: 'anime' | 'manga';
 }
 
-export function MediaCard({ media, variant = 'grid', type }: MediaCardProps) {
-  const href = `https://anilist.co/${type}/${media.id}`;
+export function MediaCard({ media, variant = 'grid' }: MediaCardProps) {
 
   if (variant === 'carousel') {
     return (
-      <Link href={href} target="_blank" rel="noopener noreferrer" className="block group">
+      <div className="block group cursor-pointer">
         <div className="aspect-[2/3] relative rounded-lg overflow-hidden transition-transform duration-300 group-hover:scale-105">
           <Image
             src={media.coverImage.extraLarge}
@@ -28,12 +25,12 @@ export function MediaCard({ media, variant = 'grid', type }: MediaCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
-      </Link>
+      </div>
     );
   }
 
   return (
-    <Link href={href} target="_blank" rel="noopener noreferrer" className="block group text-left">
+    <div className="block group text-left cursor-pointer">
       <div className="flex flex-col h-full">
         <div className="aspect-[2/3] relative rounded-lg overflow-hidden mb-3">
           <Image
@@ -60,6 +57,6 @@ export function MediaCard({ media, variant = 'grid', type }: MediaCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
