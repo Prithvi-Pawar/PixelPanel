@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Edit } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditProfileForm } from "@/components/edit-profile-form";
 
 export interface UserProfile {
@@ -14,16 +14,26 @@ export interface UserProfile {
     avatarUrl: string;
 }
 
+const defaultProfile: UserProfile = {
+    name: "Username",
+    bio: "Living one episode at a time.",
+    avatarUrl: "https://placehold.co/100x100.png",
+};
+
 export default function ProfilePage() {
-    const [profile, setProfile] = useState<UserProfile>({
-        name: "Username",
-        bio: "Living one episode at a time.",
-        avatarUrl: "https://placehold.co/100x100.png",
-    });
+    const [profile, setProfile] = useState<UserProfile>(defaultProfile);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+    useEffect(() => {
+        const savedProfile = localStorage.getItem('userProfile');
+        if (savedProfile) {
+            setProfile(JSON.parse(savedProfile));
+        }
+    }, []);
 
     const handleSave = (newProfile: UserProfile) => {
         setProfile(newProfile);
+        localStorage.setItem('userProfile', JSON.stringify(newProfile));
         setIsEditDialogOpen(false);
     };
 
@@ -44,7 +54,7 @@ export default function ProfilePage() {
                                 </Button>
                             </DialogTrigger>
                              <DialogContent>
-                                <EditProfileForm currentProfile={profile} onSave={handleSave} />
+                                <EditProfileForm currentProfile={profile} onSave={handleSave} onCancel={() => setIsEditDialogOpen(false)} />
                             </DialogContent>
                         </Dialog>
                     </div>
@@ -59,7 +69,7 @@ export default function ProfilePage() {
                                 <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Profile</Button>
                             </DialogTrigger>
                              <DialogContent>
-                                <EditProfileForm currentProfile={profile} onSave={handleSave} />
+                                <EditProfileForm currentProfile={profile} onSave={handleSave} onCancel={() => setIsEditDialogOpen(false)} />
                             </DialogContent>
                         </Dialog>
                         <Button><Plus className="mr-2 h-4 w-4" /> Add to List</Button>
