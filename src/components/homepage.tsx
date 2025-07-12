@@ -23,7 +23,7 @@ const HOMEPAGE_QUERY = `
       media(type: ANIME, sort: SCORE_DESC, isAdult: false) { ...mediaFields }
     }
     popularThisSeason: Page(page: 1, perPage: 15) {
-        media(type: ANIME, sort: POPULARITY_DESC, season: CURRENT, isAdult: false) { ...mediaFields }
+        media(type: ANIME, sort: POPULARITY_DESC, status: RELEASING, isAdult: false) { ...mediaFields }
     }
     allTimePopular: Page(page: 1, perPage: 15) {
         media(type: ANIME, sort: POPULARITY_DESC, isAdult: false) { ...mediaFields }
