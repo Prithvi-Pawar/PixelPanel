@@ -11,7 +11,7 @@ import { ScheduleCard } from '@/components/schedule-card';
 const SCHEDULE_QUERY = `
   query GetSchedule($page: Int, $perPage: Int, $airingAt_greater: Int, $airingAt_lesser: Int) {
     Page(page: $page, perPage: $perPage) {
-      media: airingSchedules(sort: TIME_DESC, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser) {
+      media: airingSchedules(sort: TIME, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser) {
         episode
         airingAt
         media {
@@ -54,15 +54,16 @@ export default function SchedulePage() {
           airingAt_lesser: endTimestamp,
         });
         
-        // Filter out duplicates based on media id
         const uniqueMedia = new Map<number, AiringSchedule>();
         response.data.Page.media.forEach(item => {
+            // Keep the earliest airing episode for a given day
             if (!uniqueMedia.has(item.media.id)) {
                 uniqueMedia.set(item.media.id, item);
             }
         });
 
-        setScheduleData(Array.from(uniqueMedia.values()));
+        const sortedData = Array.from(uniqueMedia.values()).sort((a, b) => a.airingAt - b.airingAt);
+        setScheduleData(sortedData);
 
       } catch (error) {
         console.error("Failed to fetch schedule data:", error);
@@ -106,7 +107,7 @@ export default function SchedulePage() {
             [...Array(6)].map((_, i) => <ScheduleCard.Skeleton key={i} />)
         ) : scheduleData.length > 0 ? (
           scheduleData.map(item => (
-            <ScheduleCard key={item.media.id} schedule={item} />
+            <ScheduleCard key={`${item.media.id}-${item.episode}`} schedule={item} />
           ))
         ) : (
           <p className="text-muted-foreground col-span-full text-center py-8">
