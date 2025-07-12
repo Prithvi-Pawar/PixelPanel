@@ -34,6 +34,8 @@ export default function ProfilePage() {
     const handleSave = (newProfile: UserProfile) => {
         setProfile(newProfile);
         localStorage.setItem('userProfile', JSON.stringify(newProfile));
+        // Dispatch a custom event to notify other components (like the header)
+        window.dispatchEvent(new CustomEvent('profileUpdated'));
         setIsEditDialogOpen(false);
     };
 
