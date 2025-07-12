@@ -38,11 +38,12 @@ export function getNextMonth() {
 }
 
 export function getWeekDays(): Date[] {
-  const base = new Date();
+  const today = new Date();
+  const currentDay = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
   const week = [];
   for (let i = 0; i < 7; i++) {
-    const day = new Date(base);
-    day.setDate(base.getDate() + i);
+    const day = new Date(today);
+    day.setDate(today.getDate() - currentDay + i);
     week.push(day);
   }
   return week;

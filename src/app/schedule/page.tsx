@@ -29,9 +29,14 @@ type AiringSchedule = {
   media: Media;
 };
 
+type GroupedSchedule = {
+  aired: AiringSchedule[];
+  airingSoon: AiringSchedule[];
+}
+
 export default function SchedulePage() {
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [scheduleData, setScheduleData] = useState<AiringSchedule[]>([]);
+  const [scheduleData, setScheduleData] = useState<GroupedSchedule>({ aired: [], airingSoon: [] });
   const [loading, setLoading] = useState(true);
   const weekDays = getWeekDays();
 
@@ -46,6 +51,7 @@ export default function SchedulePage() {
 
         const startTimestamp = Math.floor(startOfDay.getTime() / 1000);
         const endTimestamp = Math.floor(endOfDay.getTime() / 1000);
+        const nowTimestamp = Math.floor(new Date().getTime() / 1000);
 
         const response = await fetchAnilistData<{ Page: { media: AiringSchedule[] } }>(SCHEDULE_QUERY, {
           page: 1,
@@ -56,18 +62,21 @@ export default function SchedulePage() {
         
         const uniqueMedia = new Map<number, AiringSchedule>();
         response.data.Page.media.forEach(item => {
-            // Keep the earliest airing episode for a given day
             if (!uniqueMedia.has(item.media.id)) {
                 uniqueMedia.set(item.media.id, item);
             }
         });
 
         const sortedData = Array.from(uniqueMedia.values()).sort((a, b) => a.airingAt - b.airingAt);
-        setScheduleData(sortedData);
+        
+        const aired = sortedData.filter(item => item.airingAt < nowTimestamp);
+        const airingSoon = sortedData.filter(item => item.airingAt >= nowTimestamp);
+        
+        setScheduleData({ aired, airingSoon });
 
       } catch (error) {
         console.error("Failed to fetch schedule data:", error);
-        setScheduleData([]);
+        setScheduleData({ aired: [], airingSoon: [] });
       } finally {
         setLoading(false);
       }
@@ -102,19 +111,38 @@ export default function SchedulePage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {loading ? (
-            [...Array(6)].map((_, i) => <ScheduleCard.Skeleton key={i} />)
-        ) : scheduleData.length > 0 ? (
-          scheduleData.map(item => (
-            <ScheduleCard key={`${item.media.id}-${item.episode}`} schedule={item} />
-          ))
-        ) : (
-          <p className="text-muted-foreground col-span-full text-center py-8">
-            No anime airing on this day.
-          </p>
-        )}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => <ScheduleCard.Skeleton key={i} />)}
+        </div>
+      ) : (
+        <div className="space-y-8">
+            {scheduleData.aired.length > 0 && (
+                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {scheduleData.aired.map(item => (
+                        <ScheduleCard key={`${item.media.id}-${item.episode}`} schedule={item} status="Aired" />
+                    ))}
+                </div>
+            )}
+
+            {scheduleData.airingSoon.length > 0 && (
+                <div className="space-y-6">
+                    <h2 className="text-2xl font-bold font-headline tracking-wider text-white/90">Airing Soon</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {scheduleData.airingSoon.map(item => (
+                            <ScheduleCard key={`${item.media.id}-${item.episode}`} schedule={item} status="Airing Soon" />
+                        ))}
+                    </div>
+                </div>
+            )}
+            
+            {scheduleData.aired.length === 0 && scheduleData.airingSoon.length === 0 && (
+                <p className="text-muted-foreground col-span-full text-center py-8">
+                    No anime airing on this day.
+                </p>
+            )}
+        </div>
+      )}
     </div>
   );
 }

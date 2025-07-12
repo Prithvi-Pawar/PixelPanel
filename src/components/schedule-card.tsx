@@ -5,6 +5,9 @@ import { Badge } from './ui/badge';
 import { Clock, CheckCircle2 } from 'lucide-react';
 import { formatAiringTime } from '@/lib/date-utils';
 import { Skeleton } from './ui/skeleton';
+import { cn } from '@/lib/utils';
+
+type AiringStatus = 'Aired' | 'Airing Soon';
 
 interface ScheduleCardProps {
   schedule: {
@@ -12,10 +15,12 @@ interface ScheduleCardProps {
     airingAt: number;
     media: Media;
   };
+  status: AiringStatus;
 }
 
-export function ScheduleCard({ schedule }: ScheduleCardProps) {
+export function ScheduleCard({ schedule, status }: ScheduleCardProps) {
   const { media, episode, airingAt } = schedule;
+  const isAired = status === 'Aired';
 
   return (
     <div className="group relative flex gap-4 rounded-2xl bg-card p-4 transition-all duration-300 hover:bg-white/5 hover:shadow-lg hover:shadow-primary/10">
@@ -34,9 +39,12 @@ export function ScheduleCard({ schedule }: ScheduleCardProps) {
       </div>
 
       <div className="flex flex-col flex-1 min-w-0">
-        <Badge variant="secondary" className="bg-green-500/10 text-green-400 border-none w-fit mb-2">
+        <Badge variant="secondary" className={cn(
+            "border-none w-fit mb-2",
+            isAired ? "bg-green-500/10 text-green-400" : "bg-pink-500/10 text-pink-400"
+        )}>
             <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
-            Aired
+            {status}
         </Badge>
         
         <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer" className="block">
