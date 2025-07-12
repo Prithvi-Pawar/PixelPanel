@@ -10,31 +10,24 @@ interface MediaGridCardProps {
 
 export function MediaGridCard({ media }: MediaGridCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl">
-      <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer" className="block">
-        <div className="relative aspect-[2/3] w-full">
-          <Image
-            src={media.coverImage.extraLarge}
-            alt={media.title.userPreferred}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-        </div>
-        <div className="absolute bottom-0 left-0 p-4">
-          <h3 className="text-base font-bold text-white line-clamp-2">{media.title.userPreferred}</h3>
-          <div className="mt-2 flex items-center gap-2">
-            {media.averageScore && (
-                <Badge variant="secondary" className="bg-primary/20 text-primary border-none">
-                    <Star className="mr-1 h-3 w-3" />
-                    {media.averageScore / 10}
-                </Badge>
-            )}
-            <Badge variant="outline" className="border-white/50 text-white/80 bg-black/20 backdrop-blur-sm">{media.format}</Badge>
-          </div>
-        </div>
+    <div className="group relative overflow-hidden rounded-2xl flex flex-col">
+       <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer" className="block relative aspect-[2/3] w-full">
+        <Image
+          src={media.coverImage.extraLarge}
+          alt={media.title.userPreferred}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-2xl"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          data-ai-hint="anime manga poster"
+        />
       </Link>
+      <div className="pt-2">
+        <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer">
+            <h3 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                {media.title.userPreferred}
+            </h3>
+        </Link>
+      </div>
     </div>
   );
 }

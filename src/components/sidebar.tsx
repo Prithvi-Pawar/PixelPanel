@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, TrendingUp, Film, Calendar, User } from "lucide-react";
+import { Home, TrendingUp, Film, Calendar, User, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const navItems = [
+  { href: "/search", label: "Search", icon: Search },
   { href: "/", label: "Home", icon: Home },
   { href: "/trending", label: "Trending", icon: TrendingUp },
   { href: "/movies", label: "Movies", icon: Film },
