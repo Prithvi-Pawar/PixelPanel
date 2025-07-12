@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, TrendingUp, Film, Trophy, User, Sparkles } from "lucide-react";
+import { Home, TrendingUp, Film, Calendar, User, Sparkles } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/trending", label: "Trending", icon: TrendingUp },
   { href: "/movies", label: "Movies", icon: Film },
-  { href: "/top-10", label: "Top 10", icon: Trophy },
+  { href: "/schedule", label: "Schedule", icon: Calendar },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
