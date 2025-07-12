@@ -49,8 +49,8 @@ const placeholderMedia: Media = {
     trailer: null,
 };
 
-const watchingList = Array(4).fill(placeholderMedia).map((item, i) => ({ ...item, id: i + 10, title: { ...item.title, romaji: `${item.title.romaji} Vol. ${i+1}` } }));
-const completedList = Array(8).fill(placeholderMedia).map((item, i) => ({ ...item, id: i + 20, title: { ...item.title, romaji: `Classic Anime ${i+1}` } }));
+const watchingList = Array(4).fill(placeholderMedia).map((item, i) => ({ ...item, id: i + 10, title: { ...item.title, romaji: `${item.title.romaji} Vol. ${i+1}` }, status: 'RELEASING' }));
+const completedList = Array(8).fill(placeholderMedia).map((item, i) => ({ ...item, id: i + 20, title: { ...item.title, romaji: `Classic Anime ${i+1}` }, status: 'FINISHED' }));
 
 
 const statCardData = [

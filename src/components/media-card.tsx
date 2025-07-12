@@ -1,42 +1,48 @@
 import type { Media } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Badge } from './ui/badge';
 
 interface MediaCardProps {
   media: Media;
   type: 'anime' | 'manga';
+  showEpisode?: boolean;
 }
 
-export function MediaCard({ media, type }: MediaCardProps) {
+export function MediaCard({ media, type, showEpisode }: MediaCardProps) {
+  const statusColor = media.status === 'RELEASING' ? 'bg-green-500' : 'bg-red-500';
+
   return (
-    <Link href={`https://anilist.co/${type}/${media.id}`} target="_blank" rel="noopener noreferrer" className="block group text-left">
-      <div className="flex flex-col h-full">
-        <div className="aspect-[2/3] relative rounded-lg overflow-hidden mb-3">
-          <Image
-            src={media.coverImage.large}
-            alt={media.title.userPreferred}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-            data-ai-hint="anime manga poster"
-          />
+    <div className="group text-left">
+      <div className="relative">
+        <div className="aspect-[2/3] relative rounded-lg overflow-hidden mb-2">
+          <Link href={`https://anilist.co/${type}/${media.id}`} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+            <Image
+              src={media.coverImage.extraLarge}
+              alt={media.title.userPreferred}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+              data-ai-hint="anime manga poster"
+            />
+           </Link>
+          {showEpisode && (
+            <Badge className="absolute top-2 left-2 bg-black/70 text-white border-none">
+              Episode 1
+            </Badge>
+          )}
         </div>
-        <div className="flex flex-col flex-grow">
-          <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-            {media.title.userPreferred}
-          </h3>
-          <div className="mt-auto pt-1 flex items-center justify-between text-xs text-muted-foreground">
-            <span>{media.format?.replace(/_/g, ' ')}</span>
-            {media.averageScore && (
-              <div className="flex items-center gap-1 text-yellow-400">
-                <Star className="h-3 w-3 fill-current" />
-                <span className="font-semibold">{media.averageScore}</span>
-              </div>
-            )}
-          </div>
-        </div>
+        
       </div>
-    </Link>
+      <div className="flex items-start gap-2">
+        <span className={cn("mt-1.5 h-2 w-2 rounded-full flex-shrink-0", statusColor)} />
+        <Link href={`https://anilist.co/${type}/${media.id}`} target="_blank" rel="noopener noreferrer" className="block">
+            <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              {media.title.userPreferred}
+            </h3>
+        </Link>
+      </div>
+    </div>
   );
 }

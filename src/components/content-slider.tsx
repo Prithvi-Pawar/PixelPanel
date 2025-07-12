@@ -30,9 +30,9 @@ export function ContentSlider({ title, items, type }: ContentSliderProps) {
         className="relative"
       >
         <CarouselContent>
-          {items.map((item) => (
+          {items.map((item, index) => (
             <CarouselItem key={item.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6">
-               <MediaCard media={item} type={type} />
+               <MediaCard media={item} type={type} showEpisode={index === 0} />
             </CarouselItem>
           ))}
         </CarouselContent>

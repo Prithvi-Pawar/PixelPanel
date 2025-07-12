@@ -16,8 +16,8 @@ export function MediaGrid({ title, media, type }: MediaGridProps) {
     <section>
       {title && <h2 className="text-2xl font-bold tracking-tight mb-6">{title}</h2>}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-8">
-        {media.map((item) => (
-          <MediaCard key={item.id} media={item} type={type} />
+        {media.map((item, index) => (
+          <MediaCard key={item.id} media={item} type={type} showEpisode={index === 0} />
         ))}
       </div>
     </section>
