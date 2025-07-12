@@ -31,17 +31,17 @@ export function MediaSlider({ title, items }: MediaSliderProps) {
             align: "start",
             loop: false,
             }}
-            className="relative -mx-4"
+            className="relative -mx-2"
         >
-            <CarouselContent className="pl-4">
+            <CarouselContent className="pl-2">
             {items.map((item) => (
-                <CarouselItem key={item.id} className="basis-auto">
+                <CarouselItem key={item.id} className="basis-auto pl-2">
                     <MediaCard media={item} />
                 </CarouselItem>
             ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-6 top-1/2 -translate-y-1/2 hidden lg:flex" />
-            <CarouselNext className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex" />
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
         </Carousel>
     </div>
   );
