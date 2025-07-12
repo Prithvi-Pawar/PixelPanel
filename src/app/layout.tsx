@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from 'next/font/google';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { GlobalSidebar } from '@/components/global-sidebar';
+import { Header } from '@/components/header';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,8 +23,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
-      <body className="font-body antialiased bg-background">
-        {children}
+      <body className="font-body antialiased bg-background text-foreground">
+        <SidebarProvider>
+          <GlobalSidebar />
+          <div className="flex-1">
+            <Header />
+            <main>
+              {children}
+            </main>
+          </div>
+        </SidebarProvider>
         <Toaster />
       </body>
     </html>
