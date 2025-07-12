@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from 'next/font/google';
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${inter.variable}`}>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased bg-background">
         {children}
         <Toaster />
       </body>

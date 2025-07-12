@@ -58,37 +58,3 @@ export async function fetchAnilistData<T>(query: string, variables?: Record<stri
     throw error;
   }
 }
-
-const mediaListQuery = `
-  query ($page: Int, $perPage: Int, $sort: [MediaSort], $type: MediaType) {
-    Page(page: $page, perPage: $perPage) {
-      pageInfo {
-        hasNextPage
-      }
-      media(sort: $sort, type: $type, isAdult: false) {
-        ...mediaFields
-      }
-    }
-  }
-  ${mediaFragment}
-`;
-
-export async function getMediaList(options: {
-  sort: string;
-  type: 'ANIME' | 'MANGA';
-  page?: number;
-  perPage?: number;
-}): Promise<Media[]> {
-  const { sort, type, page = 1, perPage = 10 } = options;
-  const variables = { sort: [sort], type, page, perPage };
-  const result = await fetchAnilistData<{ Page: Page }>(mediaListQuery, variables);
-  return result.data.Page.media;
-}
-
-export async function getTrendingMedia(options: {
-  type: 'ANIME' | 'MANGA';
-  page?: number;
-  perPage?: number;
-}): Promise<Media[]> {
-    return getMediaList({ ...options, sort: 'TRENDING_DESC' });
-}
