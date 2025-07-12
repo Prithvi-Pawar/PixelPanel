@@ -20,6 +20,7 @@ export default {
       fontFamily: {
         body: ['var(--font-poppins)', 'sans-serif'],
         headline: ['var(--font-poppins)', 'sans-serif'],
+        mono: ['var(--font-roboto-mono)', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
