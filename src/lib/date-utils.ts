@@ -36,3 +36,23 @@ export function getNextMonth() {
         end: toFuzzyDate(nextMonth),
     };
 }
+
+export function getWeekDays(): Date[] {
+  const base = new Date();
+  const week = [];
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(base);
+    day.setDate(base.getDate() + i);
+    week.push(day);
+  }
+  return week;
+}
+
+export function getDayOfWeek(date: Date): string {
+  return date.toLocaleDateString('en-US', { weekday: 'long' });
+}
+
+export function formatAiringTime(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}

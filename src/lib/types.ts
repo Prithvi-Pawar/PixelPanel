@@ -38,4 +38,8 @@ export interface Media {
     site: string;
     thumbnail: string;
   } | null;
+  nextAiringEpisode?: {
+    airingAt: number;
+    episode: number;
+  } | null;
 }

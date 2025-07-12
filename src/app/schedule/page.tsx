@@ -1,79 +1,119 @@
-import { MediaGrid } from '@/components/media-grid';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { fetchAnilistData, mediaFragment } from '@/lib/anilist';
 import type { Media } from '@/lib/types';
-import { getNextWeek, getNextMonth } from '@/lib/date-utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getDayOfWeek, getWeekDays } from '@/lib/date-utils';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ScheduleCard } from '@/components/schedule-card';
 
-const UPCOMING_QUERY = `
-  query GetUpcoming($page: Int, $perPage: Int, $startDate_greater: FuzzyDateInt, $endDate_lesser: FuzzyDateInt) {
+const SCHEDULE_QUERY = `
+  query GetSchedule($page: Int, $perPage: Int, $airingAt_greater: Int, $airingAt_lesser: Int) {
     Page(page: $page, perPage: $perPage) {
-      media(sort: POPULARITY_DESC, type: ANIME, status: NOT_YET_RELEASED, startDate_greater: $startDate_greater, startDate_lesser: $endDate_lesser) {
-        ...mediaFields
+      media: airingSchedules(sort: TIME_DESC, airingAt_greater: $airingAt_greater, airingAt_lesser: $airingAt_lesser) {
+        episode
+        airingAt
+        media {
+          ...mediaFields
+        }
       }
     }
   }
   ${mediaFragment}
 `;
 
-async function getUpcomingData() {
-  try {
-    const nextWeekRange = getNextWeek();
-    const nextMonthRange = getNextMonth();
+type AiringSchedule = {
+  episode: number;
+  airingAt: number;
+  media: Media;
+};
 
-    const [thisWeekRes, thisMonthRes] = await Promise.all([
-       fetchAnilistData<{ Page: { media: Media[] } }>(UPCOMING_QUERY, {
-        page: 1,
-        perPage: 20,
-        startDate_greater: nextWeekRange.start,
-        endDate_lesser: nextWeekRange.end,
-      }),
-      fetchAnilistData<{ Page: { media: Media[] } }>(UPCOMING_QUERY, {
-        page: 1,
-        perPage: 20,
-        startDate_greater: nextMonthRange.start,
-        endDate_lesser: nextMonthRange.end,
-      }),
-    ]);
-    
-    return {
-      thisWeek: thisWeekRes.data.Page.media,
-      thisMonth: thisMonthRes.data.Page.media,
-    };
-  } catch (error) {
-    console.error("Failed to fetch schedule data:", error);
-    return {
-      thisWeek: [],
-      thisMonth: [],
-    };
-  }
-}
+export default function SchedulePage() {
+  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [scheduleData, setScheduleData] = useState<AiringSchedule[]>([]);
+  const [loading, setLoading] = useState(true);
+  const weekDays = getWeekDays();
 
-export default async function SchedulePage() {
-  const { thisWeek, thisMonth } = await getUpcomingData();
+  useEffect(() => {
+    async function loadSchedule() {
+      setLoading(true);
+      try {
+        const startOfDay = new Date(selectedDay);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(selectedDay);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const startTimestamp = Math.floor(startOfDay.getTime() / 1000);
+        const endTimestamp = Math.floor(endOfDay.getTime() / 1000);
+
+        const response = await fetchAnilistData<{ Page: { media: AiringSchedule[] } }>(SCHEDULE_QUERY, {
+          page: 1,
+          perPage: 50,
+          airingAt_greater: startTimestamp,
+          airingAt_lesser: endTimestamp,
+        });
+        
+        // Filter out duplicates based on media id
+        const uniqueMedia = new Map<number, AiringSchedule>();
+        response.data.Page.media.forEach(item => {
+            if (!uniqueMedia.has(item.media.id)) {
+                uniqueMedia.set(item.media.id, item);
+            }
+        });
+
+        setScheduleData(Array.from(uniqueMedia.values()));
+
+      } catch (error) {
+        console.error("Failed to fetch schedule data:", error);
+        setScheduleData([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSchedule();
+  }, [selectedDay]);
+
+  const today = new Date().toDateString();
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold font-headline tracking-wider">Upcoming Schedule</h1>
-      <Tabs defaultValue="this-week">
-        <TabsList>
-          <TabsTrigger value="this-week">This Week</TabsTrigger>
-          <TabsTrigger value="this-month">This Month</TabsTrigger>
-        </TabsList>
-        <TabsContent value="this-week">
-          {thisWeek.length > 0 ? (
-            <MediaGrid media={thisWeek} />
-          ) : (
-            <p className="text-muted-foreground">No new anime scheduled for this week.</p>
-          )}
-        </TabsContent>
-        <TabsContent value="this-month">
-          {thisMonth.length > 0 ? (
-            <MediaGrid media={thisMonth} />
-          ) : (
-             <p className="text-muted-foreground">No new anime scheduled for this month.</p>
-          )}
-        </TabsContent>
-      </Tabs>
+      <div>
+        <h1 className="text-3xl md:text-4xl font-extrabold text-white font-headline tracking-wider">Anime Schedule</h1>
+        <p className="text-muted-foreground mt-2 text-lg">Stay updated with the latest anime releases</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {weekDays.map(day => (
+          <Button
+            key={day.toISOString()}
+            variant="ghost"
+            onClick={() => setSelectedDay(day)}
+            className={cn(
+              "rounded-full px-4 py-2 h-auto text-sm font-semibold transition-colors",
+              selectedDay.toDateString() === day.toDateString()
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-muted text-muted-foreground hover:bg-accent"
+            )}
+          >
+            {getDayOfWeek(day)} {day.toDateString() === today && '(Today)'}
+          </Button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {loading ? (
+            [...Array(6)].map((_, i) => <ScheduleCard.Skeleton key={i} />)
+        ) : scheduleData.length > 0 ? (
+          scheduleData.map(item => (
+            <ScheduleCard key={item.media.id} schedule={item} />
+          ))
+        ) : (
+          <p className="text-muted-foreground col-span-full text-center py-8">
+            No anime airing on this day.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
