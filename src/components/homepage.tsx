@@ -5,7 +5,6 @@ import type { Media } from '@/lib/types';
 import { fetchAnilistData, mediaFragment } from '@/lib/anilist';
 import { LoadingState } from './loading-state';
 import { Hero } from './hero';
-import { ContentGrid } from './content-grid';
 import { ContentSlider } from './content-slider';
 
 interface HomepageData {
@@ -24,7 +23,7 @@ const HOMEPAGE_QUERY = `
       media(type: ANIME, sort: SCORE_DESC, isAdult: false) { ...mediaFields }
     }
     popularThisSeason: Page(page: 1, perPage: 15) {
-        media(type: ANIME, sort: POPULARITY_DESC, season: CURRENT, seasonYear: 2024, isAdult: false) { ...mediaFields }
+        media(type: ANIME, sort: POPULARITY_DESC, season: CURRENT, isAdult: false) { ...mediaFields }
     }
     allTimePopular: Page(page: 1, perPage: 15) {
         media(type: ANIME, sort: POPULARITY_DESC, isAdult: false) { ...mediaFields }
@@ -42,7 +41,7 @@ export function Homepage() {
     async function loadData() {
       try {
         setLoading(true);
-        const result = await fetchAnilistData<HomepageData>(HOMEPAGE_QUERY);
+        const result = await fetchAnilistData<any>(HOMEPAGE_QUERY);
         setData({
           trending: result.data.trending.media,
           topRated: result.data.topRated.media,
