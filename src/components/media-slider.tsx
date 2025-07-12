@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { MediaCard } from './media-card';
+import { MediaGridCard } from './media-grid-card';
 
 interface MediaSliderProps {
   title: string;
@@ -35,8 +35,8 @@ export function MediaSlider({ title, items }: MediaSliderProps) {
         >
             <CarouselContent className="pl-2">
             {items.map((item) => (
-                <CarouselItem key={item.id} className="basis-auto pl-2">
-                    <MediaCard media={item} />
+                <CarouselItem key={item.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 2xl:basis-1/8 pl-4">
+                    <MediaGridCard media={item} />
                 </CarouselItem>
             ))}
             </CarouselContent>
