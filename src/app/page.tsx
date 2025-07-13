@@ -1,26 +1,23 @@
 import { MediaSlider } from '@/components/media-slider';
 import { RankedMediaItem } from '@/components/ranked-media-item';
 import { fetchAnilistData, mediaFragment } from '@/lib/anilist';
+import { getSeason, getYear } from '@/lib/date-utils';
 import type { Media } from '@/lib/types';
 
 interface DashboardData {
-  favorites: Media[];
-  popularMovies: Media[];
-  nextSeason: Media[];
+  popularThisSeason: Media[];
+  specialForYou: Media[];
   top10: Media[];
   allTimePopular: Media[];
 }
 
 const DASHBOARD_QUERY = `
-  query GetDashboardData {
-    favorites: Page(page: 1, perPage: 15) {
-      media(sort: FAVOURITES_DESC, type: ANIME) { ...mediaFields }
+  query GetDashboardData($season: MediaSeason, $seasonYear: Int) {
+    popularThisSeason: Page(page: 1, perPage: 15) {
+      media(sort: POPULARITY_DESC, type: ANIME, season: $season, seasonYear: $seasonYear) { ...mediaFields }
     }
-    popularMovies: Page(page: 1, perPage: 15) {
-      media(sort: POPULARITY_DESC, type: ANIME, format: MOVIE) { ...mediaFields }
-    }
-    nextSeason: Page(page: 1, perPage: 15) {
-      media(sort: POPULARITY_DESC, type: ANIME, status: NOT_YET_RELEASED) { ...mediaFields }
+    specialForYou: Page(page: 1, perPage: 15) {
+      media(sort: TRENDING_DESC, type: ANIME) { ...mediaFields }
     }
     top10: Page(page: 1, perPage: 10) {
       media(sort: SCORE_DESC, type: ANIME) { ...mediaFields }
@@ -32,22 +29,23 @@ const DASHBOARD_QUERY = `
   ${mediaFragment}
 `;
 
-async function getDashboardData() {
+async function getDashboardData(): Promise<DashboardData> {
     try {
-        const result = await fetchAnilistData<any>(DASHBOARD_QUERY);
+        const season = getSeason();
+        const seasonYear = getYear();
+        const result = await fetchAnilistData<any>(DASHBOARD_QUERY, { season, seasonYear });
+        
         return {
-            favorites: result.data.favorites.media,
-            popularMovies: result.data.popularMovies.media,
-            nextSeason: result.data.nextSeason.media,
+            popularThisSeason: result.data.popularThisSeason.media,
+            specialForYou: result.data.specialForYou.media,
             top10: result.data.top10.media,
             allTimePopular: result.data.allTimePopular.media,
         };
     } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
         return {
-            favorites: [],
-            popularMovies: [],
-            nextSeason: [],
+            popularThisSeason: [],
+            specialForYou: [],
             top10: [],
             allTimePopular: [],
         };
@@ -59,8 +57,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="w-full space-y-12">
-      <MediaSlider title="Most Favorite" items={data.favorites} />
-      <MediaSlider title="Popular Movies" items={data.popularMovies} />
+      <MediaSlider title="Popular This Season" items={data.popularThisSeason} />
+      <MediaSlider title="Special For You" items={data.specialForYou} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
@@ -81,7 +79,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <MediaSlider title="Next Season" items={data.nextSeason} />
     </div>
   );
 }
