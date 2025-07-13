@@ -22,40 +22,18 @@ const navItems = [
   { href: "/profile", label: "Profile", icon: User },
 ];
 
-function AnimatedEarthLogo() {
-  return (
-    <div className="scene">
-      <div className="globe">
-        <div className="globe-wrap">
-          <div className="circle"></div>
-          <div className="land land-1"></div>
-        </div>
-        <div className="globe-wrap">
-          <div className="circle"></div>
-          <div className="land land-2"></div>
-        </div>
-        <div className="globe-wrap">
-          <div className="circle"></div>
-          <div className="land land-3"></div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
     <aside className="fixed left-0 top-0 z-50 h-full w-20 flex flex-col items-center py-6 bg-card border-r border-border space-y-6">
       <Link href="/" className="text-primary flex items-center justify-center h-8 w-8">
-        <AnimatedEarthLogo />
-        <span className="sr-only">AniPlay</span>
+        {/* The logo is now in the header */}
+        <span className="sr-only">PixelPanel Home</span>
       </Link>
       
       <TooltipProvider delayDuration={0}>
-        <nav className="flex flex-col items-center gap-4">
+        <nav className="flex flex-col items-center gap-4 pt-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (

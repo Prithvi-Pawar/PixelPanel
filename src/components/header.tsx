@@ -8,6 +8,27 @@ import type { UserProfile } from '@/app/profile/page';
 
 const defaultAvatar = "https://placehold.co/40x40.png";
 
+function AnimatedEarthLogo() {
+  return (
+    <div className="scene">
+      <div className="globe">
+        <div className="globe-wrap">
+          <div className="circle"></div>
+          <div className="land land-1"></div>
+        </div>
+        <div className="globe-wrap">
+          <div className="circle"></div>
+          <div className="land land-2"></div>
+        </div>
+        <div className="globe-wrap">
+          <div className="circle"></div>
+          <div className="land land-3"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Header() {
   const [avatarUrl, setAvatarUrl] = useState<string>(defaultAvatar);
 
@@ -39,9 +60,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-headline text-2xl font-bold text-white">Pixel</span>
-          <span className="font-headline text-2xl font-bold text-primary">Panel</span>
+        <Link href="/" className="flex items-center gap-3">
+          <AnimatedEarthLogo />
+          <div className="flex items-center">
+            <span className="font-headline text-2xl font-bold text-white">Pixel</span>
+            <span className="font-headline text-2xl font-bold text-primary">Panel</span>
+          </div>
         </Link>
         <div className="flex items-center gap-4">
           <DigitalClock />
