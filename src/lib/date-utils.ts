@@ -10,6 +10,26 @@ export function getSeason() {
   return 'FALL';
 }
 
+export function getNextSeason(): { season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'; year: number } {
+    const today = new Date();
+    const month = today.getMonth();
+    let year = today.getFullYear();
+    let season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
+
+    if (month < 3) { // Current: Winter
+        season = 'SPRING';
+    } else if (month < 6) { // Current: Spring
+        season = 'SUMMER';
+    } else if (month < 9) { // Current: Summer
+        season = 'FALL';
+    } else { // Current: Fall
+        season = 'WINTER';
+        year += 1;
+    }
+    return { season, year };
+}
+
+
 function toFuzzyDate(date: Date) {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -50,7 +70,7 @@ export function getWeekDays(): Date[] {
 }
 
 export function getDayOfWeek(date: Date): string {
-  return date.toLocaleDateString('en-US', { weekday: 'long' });
+  return date.toLocaleString('en-US', { weekday: 'long' });
 }
 
 export function formatAiringTime(timestamp: number): string {

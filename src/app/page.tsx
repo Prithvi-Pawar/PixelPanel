@@ -1,20 +1,24 @@
 import { MediaSlider } from '@/components/media-slider';
 import { RankedMediaItem } from '@/components/ranked-media-item';
 import { fetchAnilistData, mediaFragment } from '@/lib/anilist';
-import { getSeason, getYear } from '@/lib/date-utils';
+import { getSeason, getYear, getNextSeason } from '@/lib/date-utils';
 import type { Media } from '@/lib/types';
 
 interface DashboardData {
   popularThisSeason: Media[];
+  nextSeason: Media[];
   specialForYou: Media[];
   top10: Media[];
   allTimePopular: Media[];
 }
 
 const DASHBOARD_QUERY = `
-  query GetDashboardData($season: MediaSeason, $seasonYear: Int) {
+  query GetDashboardData($season: MediaSeason, $seasonYear: Int, $nextSeason: MediaSeason, $nextSeasonYear: Int) {
     popularThisSeason: Page(page: 1, perPage: 15) {
       media(sort: POPULARITY_DESC, type: ANIME, season: $season, seasonYear: $seasonYear) { ...mediaFields }
+    }
+    nextSeason: Page(page: 1, perPage: 15) {
+      media(sort: POPULARITY_DESC, type: ANIME, season: $nextSeason, seasonYear: $nextSeasonYear) { ...mediaFields }
     }
     specialForYou: Page(page: 1, perPage: 15) {
       media(sort: TRENDING_DESC, type: ANIME) { ...mediaFields }
@@ -33,10 +37,18 @@ async function getDashboardData(): Promise<DashboardData> {
     try {
         const season = getSeason();
         const seasonYear = getYear();
-        const result = await fetchAnilistData<any>(DASHBOARD_QUERY, { season, seasonYear });
+        const { season: nextSeason, year: nextSeasonYear } = getNextSeason();
+        
+        const result = await fetchAnilistData<any>(DASHBOARD_QUERY, { 
+            season, 
+            seasonYear,
+            nextSeason,
+            nextSeasonYear
+        });
         
         return {
             popularThisSeason: result.data.popularThisSeason.media,
+            nextSeason: result.data.nextSeason.media,
             specialForYou: result.data.specialForYou.media,
             top10: result.data.top10.media,
             allTimePopular: result.data.allTimePopular.media,
@@ -45,6 +57,7 @@ async function getDashboardData(): Promise<DashboardData> {
         console.error("Failed to fetch dashboard data:", error);
         return {
             popularThisSeason: [],
+            nextSeason: [],
             specialForYou: [],
             top10: [],
             allTimePopular: [],
@@ -58,6 +71,7 @@ export default async function DashboardPage() {
   return (
     <div className="w-full space-y-12">
       <MediaSlider title="Popular This Season" items={data.popularThisSeason} />
+      <MediaSlider title="Next Season" items={data.nextSeason} />
       <MediaSlider title="Special For You" items={data.specialForYou} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
