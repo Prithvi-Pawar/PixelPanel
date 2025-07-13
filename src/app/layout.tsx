@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
@@ -5,6 +7,7 @@ import { Poppins, Roboto_Mono } from 'next/font/google';
 import { Sidebar } from '@/components/sidebar';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
+import { usePathname } from 'next/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -17,30 +20,43 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
 })
 
-export const metadata: Metadata = {
-  title: 'PixelPanel',
-  description: 'Your Modern Anime Streaming Dashboard',
-};
+// export const metadata: Metadata = {
+//   title: 'PixelPanel',
+//   description: 'Your Modern Anime Streaming Dashboard',
+// };
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isLandingPage = pathname === '/';
+
   return (
     <html lang="en" className={`dark ${poppins.variable} ${robotoMono.variable}`} suppressHydrationWarning>
+       <head>
+        <title>PixelPanel</title>
+        <meta name="description" content="Your Modern Anime Streaming Dashboard" />
+      </head>
       <body className={cn(
         "font-body antialiased bg-background text-foreground",
-        "flex flex-col min-h-screen"
+        !isLandingPage && "flex flex-col min-h-screen"
       )}>
-        <Header />
-        <div className="flex flex-1">
-          <Sidebar />
-          <main className="flex-1 p-5 md:p-8 space-y-8 overflow-y-auto">
-            {children}
-          </main>
-        </div>
-        <Toaster />
+        {isLandingPage ? (
+          children
+        ) : (
+          <>
+            <Header />
+            <div className="flex flex-1">
+              <Sidebar />
+              <main className="flex-1 p-5 md:p-8 space-y-8 overflow-y-auto">
+                {children}
+              </main>
+            </div>
+            <Toaster />
+          </>
+        )}
       </body>
     </html>
   );

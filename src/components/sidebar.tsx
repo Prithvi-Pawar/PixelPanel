@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { href: "/search", label: "Search", icon: Search },
-  { href: "/", label: "Home", icon: Home },
+  { href: "/dashboard", label: "Home", icon: Home },
   { href: "/trending", label: "Trending", icon: TrendingUp },
   { href: "/movies", label: "Movies", icon: Film },
   { href: "/schedule", label: "Schedule", icon: Calendar },
