@@ -6,9 +6,20 @@ import type { Media } from '@/lib/types';
 
 
 const POPULAR_THIS_SEASON_QUERY = `
-    query GetPopularThisSeason($season: MediaSeason, $seasonYear: Int) {
-        Page(page: 1, perPage: 20) {
+    query GetPopularThisSeason($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int) {
+        Page(page: $page, perPage: $perPage) {
             media(sort: POPULARITY_DESC, type: ANIME, season: $season, seasonYear: $seasonYear) {
+                ...mediaFields
+            }
+        }
+    }
+    ${mediaFragment}
+`;
+
+const TRENDING_NOW_QUERY = `
+    query GetTrendingNow($page: Int, $perPage: Int) {
+        Page(page: $page, perPage: $perPage) {
+            media(sort: TRENDING_DESC, type: ANIME) {
                 ...mediaFields
             }
         }
@@ -22,16 +33,18 @@ async function getTrendingData() {
             fetchAnilistData<{ Page: { media: Media[] } }>(POPULAR_THIS_SEASON_QUERY, {
                  season: getSeason(),
                  seasonYear: getYear(),
+                 page: 1,
+                 perPage: 50
             }),
-            fetchAnilistData<{ Page: { media: Media[] } }>(POPULAR_THIS_SEASON_QUERY, {
-                 season: getSeason(),
-                 seasonYear: getYear(),
+            fetchAnilistData<{ Page: { media: Media[] } }>(TRENDING_NOW_QUERY, {
+                 page: 1,
+                 perPage: 50
             })
         ]);
 
         return {
             thisMonth: thisMonthRes.data.Page.media,
-            thisWeek: thisWeekRes.data.Page.media.slice(0, 10), // Take top 10 for "this week"
+            thisWeek: thisWeekRes.data.Page.media,
         };
     } catch (error) {
         console.error("Failed to fetch trending data:", error);
