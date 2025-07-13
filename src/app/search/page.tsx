@@ -129,27 +129,27 @@ export default function SearchPage() {
         pages.push(i);
       }
     } else {
-      let startPage = Math.max(2, page - 1);
-      let endPage = Math.min(lastPage - 1, page + 1);
+      let startPage = Math.max(2, page - 2);
+      let endPage = Math.min(lastPage - 1, page + 2);
 
-      if (page <= 3) {
+      if (page < 4) {
         startPage = 2;
-        endPage = 4;
+        endPage = Math.min(5, lastPage -1);
       }
       
-      if (page >= lastPage - 2) {
-        startPage = lastPage - 3;
+      if (page > lastPage - 3) {
+        startPage = Math.max(2, lastPage - 4);
         endPage = lastPage - 1;
       }
 
       pages.push(1);
-      if (page > 3) pages.push('...');
+      if (startPage > 2) pages.push('...');
 
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
 
-      if (page < lastPage - 2) pages.push('...');
+      if (endPage < lastPage - 1) pages.push('...');
       pages.push(lastPage);
     }
     
@@ -169,10 +169,10 @@ export default function SearchPage() {
 
 
   return (
-    <div className="flex gap-8 p-4 md:p-8">
+    <div className="flex flex-1">
       {/* Left Sidebar Filters */}
       {showFilters && (
-        <aside className="w-64 hidden md:block space-y-4">
+        <aside className="w-64 hidden md:block space-y-4 p-4 md:p-8 border-r border-border">
           <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Filters</h3>
               <Button variant="ghost" size="sm" onClick={toggleAllAccordions} className="text-muted-foreground">
@@ -233,7 +233,7 @@ export default function SearchPage() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 space-y-6 p-4 md:p-8">
         {/* Top Controls */}
         <div className="flex flex-col md:flex-row gap-4">
           <Button variant="outline" size="icon" className="md:hidden" onClick={() => setShowFilters(prev => !prev)}>
@@ -299,7 +299,7 @@ export default function SearchPage() {
         )}
 
         {/* Pagination */}
-        {results.length > 0 && (
+        {results.length > 0 && lastPage > 1 && (
           <div className="flex items-center justify-center gap-2">
             <Button
               variant="ghost"
