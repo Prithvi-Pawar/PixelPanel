@@ -95,22 +95,23 @@ export default function MoviesPage() {
         pages.push(i);
       }
     } else {
+      let startPage = Math.max(2, page - 1);
+      let endPage = Math.min(lastPage - 1, page + 1);
+
+      if (page <= 3) {
+        startPage = 2;
+        endPage = 4;
+      }
+      
+      if (page >= lastPage - 2) {
+        startPage = lastPage - 3;
+        endPage = lastPage - 1;
+      }
+
       pages.push(1);
       if (page > 3) pages.push('...');
-      
-      let start = Math.max(2, page - 1);
-      let end = Math.min(lastPage - 1, page + 1);
 
-      if(page <= 3) {
-        start = 2;
-        end = 4;
-      }
-      if(page >= lastPage - 2){
-        start = lastPage - 3;
-        end = lastPage -1;
-      }
-
-      for (let i = start; i <= end; i++) {
+      for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
 
