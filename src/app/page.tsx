@@ -11,7 +11,7 @@ export default function LandingPage() {
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <iframe
           className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
-          src={`https://www.youtube.com/embed/kDCXBwzSI-4?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=kDCXBwzSI-4`}
+          src={`https://www.youtube.com/embed/zhDwjnYZiCo?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=zhDwjnYZiCo&start=50`}
           title="YouTube video player background"
           frameBorder="0"
           allow="autoplay; encrypted-media; loop"
