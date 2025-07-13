@@ -31,15 +31,15 @@ export default function RootLayout({
     <html lang="en" className={`dark ${poppins.variable} ${robotoMono.variable}`} suppressHydrationWarning>
       <body className={cn(
         "font-body antialiased bg-background text-foreground",
-        "flex min-h-screen"
+        "flex flex-col min-h-screen"
       )}>
-        <Sidebar />
-        <main className="flex-1 flex flex-col pl-20">
-          <Header />
-          <div className="flex-1 p-5 md:p-8 space-y-8 overflow-y-auto">
+        <Header />
+        <div className="flex flex-1">
+          <Sidebar />
+          <main className="flex-1 p-5 md:p-8 space-y-8 overflow-y-auto">
             {children}
-          </div>
-        </main>
+          </main>
+        </div>
         <Toaster />
       </body>
     </html>

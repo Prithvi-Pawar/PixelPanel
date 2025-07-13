@@ -26,14 +26,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-50 h-full w-20 flex flex-col items-center py-6 bg-card border-r border-border space-y-6">
-      <Link href="/" className="text-primary flex items-center justify-center h-8 w-8">
-        {/* The logo is now in the header */}
-        <span className="sr-only">PixelPanel Home</span>
-      </Link>
-      
+    <aside className="sticky top-16 h-[calc(100vh-4rem)] z-50 w-20 flex flex-col items-center py-6 bg-card border-r border-border space-y-6">
       <TooltipProvider delayDuration={0}>
-        <nav className="flex flex-col items-center gap-4 pt-8">
+        <nav className="flex flex-col items-center gap-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
