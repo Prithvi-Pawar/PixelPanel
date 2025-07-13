@@ -11,7 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Search as SearchIcon, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search as SearchIcon, Trash2, ChevronLeft, ChevronRight, ChevronsUpDown } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 
 const SEARCH_QUERY = `
@@ -54,6 +54,7 @@ const SEARCH_QUERY = `
 
 const GENRES = ["Action", "Adventure", "Comedy", "Drama", "Ecchi", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
 const YEARS = Array.from({ length: new Date().getFullYear() - 1939 }, (_, i) => (new Date().getFullYear() - i).toString());
+const ALL_ACCORDION_ITEMS = ['season', 'format', 'status', 'origin'];
 
 export default function SearchPage() {
   const [results, setResults] = useState<Media[]>([]);
@@ -70,6 +71,7 @@ export default function SearchPage() {
   const [format, setFormat] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [origin, setOrigin] = useState<string | undefined>(undefined);
+  const [openAccordions, setOpenAccordions] = useState<string[]>(ALL_ACCORDION_ITEMS);
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -109,6 +111,14 @@ export default function SearchPage() {
     setPage(1);
   };
   
+  const toggleAllAccordions = () => {
+    if (openAccordions.length === ALL_ACCORDION_ITEMS.length) {
+      setOpenAccordions([]);
+    } else {
+      setOpenAccordions(ALL_ACCORDION_ITEMS);
+    }
+  };
+
   const renderPagination = () => {
     const pages = [];
     const maxVisiblePages = 5;
@@ -159,8 +169,15 @@ export default function SearchPage() {
   return (
     <div className="flex gap-8 p-4 md:p-8">
       {/* Left Sidebar Filters */}
-      <aside className="w-64 hidden md:block space-y-6">
-        <Accordion type="multiple" defaultValue={['season', 'format', 'status', 'origin']} className="w-full">
+      <aside className="w-64 hidden md:block space-y-4">
+        <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Filters</h3>
+            <Button variant="ghost" size="sm" onClick={toggleAllAccordions} className="text-muted-foreground">
+                <ChevronsUpDown className="mr-2 h-4 w-4" />
+                {openAccordions.length > 0 ? 'Collapse' : 'Expand'}
+            </Button>
+        </div>
+        <Accordion type="multiple" value={openAccordions} onValueChange={setOpenAccordions} className="w-full">
           <AccordionItem value="season">
             <AccordionTrigger className="font-semibold">Season</AccordionTrigger>
             <AccordionContent>
