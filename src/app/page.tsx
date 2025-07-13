@@ -72,7 +72,6 @@ export default async function DashboardPage() {
     <div className="w-full space-y-12">
       <MediaSlider title="Popular This Season" items={data.popularThisSeason} />
       <MediaSlider title="Special For You" items={data.specialForYou} />
-      <MediaSlider title="Next Season" items={data.nextSeason} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
@@ -93,6 +92,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      <MediaSlider title="Next Season" items={data.nextSeason} />
     </div>
   );
 }
