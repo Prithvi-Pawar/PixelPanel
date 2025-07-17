@@ -12,12 +12,41 @@ import { StarRating } from './star-rating';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { CharacterCard } from './character-card';
 import { RelatedMediaCard } from './related-media-card';
+import { Badge } from './ui/badge';
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <a href={href} className="text-sm font-medium text-white/80 hover:text-white transition-colors">
     {children}
   </a>
 );
+
+const platforms = [
+    { name: "aniplay.lol", url: "https://aniplay.lol", logo: "https://placehold.co/100x40.png?text=aniplay" },
+    { name: "animeonsen.xyz", url: "https://animeonsen.xyz", logo: "https://placehold.co/100x40.png?text=animeonsen" },
+    { name: "enimoe.live", url: "https://enimoe.live", logo: "https://placehold.co/100x40.png?text=enimoe" },
+    { name: "miruro.to", url: "https://www.miruro.to", logo: "https://placehold.co/100x40.png?text=miruro" },
+    { name: "animetsu.cc", url: "https://animetsu.cc", logo: "https://placehold.co/100x40.png?text=animetsu" },
+    { name: "aninow.tv", url: "https://aninow.tv", logo: "https://placehold.co/100x40.png?text=aninow" },
+];
+
+function generatePlatformUrl(platformName: string, platformUrl: string, anilistId: number, slug: string): string {
+    switch (platformName) {
+        case 'aniplay.lol':
+            return `${platformUrl}/anime/info/${anilistId}`;
+        case 'animeonsen.xyz':
+            return platformUrl; // Links to homepage
+        case 'enimoe.live':
+            return `https://enimoe.live/watch?type=anime&id=${anilistId}`;
+        case 'miruro.to':
+            return `https://www.miruro.to/watch?id=${anilistId}`;
+        case 'animetsu.cc':
+            return `https://animetsu.cc/anime/${anilistId}`;
+        case 'aninow.tv':
+            return `https://aninow.tv/a/${slug}`;
+        default:
+            return platformUrl;
+    }
+}
 
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
@@ -30,6 +59,9 @@ export function MediaDetailView({ media }: { media: Media }) {
   const mainCharacters = media.characters?.edges.filter(edge => edge.role === 'MAIN') || [];
   const supportingCharacters = media.characters?.edges.filter(edge => edge.role === 'SUPPORTING') || [];
   const relatedMedia = media.relations?.edges || [];
+
+  const slug = media.title.romaji.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+
 
   return (
     <div className="bg-background text-white">
@@ -124,9 +156,9 @@ export function MediaDetailView({ media }: { media: Media }) {
 
                   <div className="flex flex-wrap gap-2 pt-2">
                       {media.genres.slice(0, 3).map(genre => (
-                          <div key={genre} className="px-4 py-1.5 rounded-full border border-white/20 bg-white/10 text-sm">
+                           <Badge key={genre} variant="secondary" className="px-3 py-1 text-sm bg-white/10 text-white/80 backdrop-blur-sm">
                               {genre}
-                          </div>
+                           </Badge>
                       ))}
                   </div>
 
@@ -189,8 +221,21 @@ export function MediaDetailView({ media }: { media: Media }) {
         {/* Where to Watch Section */}
         <section id="watch" className="space-y-8">
             <h2 className="text-3xl font-bold font-headline">Where to Watch</h2>
-            <div className="bg-card/50 p-8 rounded-2xl text-center">
-                <p className="text-muted-foreground">Streaming information is not available at this time.</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {platforms.map(platform => {
+                    const url = generatePlatformUrl(platform.name, platform.url, media.id, slug);
+                    return (
+                        <a 
+                            key={platform.name}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-card/50 p-4 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
+                        >
+                            <span className="font-semibold text-lg">{platform.name}</span>
+                        </a>
+                    );
+                })}
             </div>
         </section>
       </div>
