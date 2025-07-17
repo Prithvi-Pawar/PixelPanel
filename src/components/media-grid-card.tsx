@@ -11,7 +11,7 @@ interface MediaGridCardProps {
 export function MediaGridCard({ media }: MediaGridCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-2xl">
-      <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer" className="block">
+      <Link href={`/media/${media.id}`} className="block">
         <div className="relative aspect-[2/3] w-full">
           <Image
             src={media.coverImage.extraLarge}

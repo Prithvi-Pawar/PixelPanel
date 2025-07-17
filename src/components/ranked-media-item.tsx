@@ -24,7 +24,7 @@ export function RankedMediaItem({ media, rank }: RankedMediaItemProps) {
         />
       </div>
       <div className="flex-1">
-        <Link href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer">
+        <Link href={`/media/${media.id}`}>
           <h3 className="font-semibold text-base line-clamp-1 group-hover:text-primary transition-colors">{media.title.userPreferred}</h3>
         </Link>
         <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
@@ -33,9 +33,11 @@ export function RankedMediaItem({ media, rank }: RankedMediaItemProps) {
           {media.averageScore && <><span>•</span><span>{media.averageScore}%</span></>}
         </div>
       </div>
-      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-        <Eye className="mr-2 h-4 w-4" /> View
-      </Button>
+      <Link href={`/media/${media.id}`} passHref legacyBehavior>
+        <Button asChild variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <a><Eye className="mr-2 h-4 w-4" /> View</a>
+        </Button>
+      </Link>
     </div>
   );
 }

@@ -11,7 +11,7 @@ export const mediaFragment = `
       native
       userPreferred
     }
-    description(asHtml: false)
+    description(asHtml: true)
     startDate { year month day }
     coverImage { extraLarge large medium color }
     bannerImage
