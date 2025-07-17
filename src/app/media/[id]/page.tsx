@@ -7,6 +7,36 @@ const MEDIA_DETAIL_QUERY = `
   query GetMediaDetail($id: Int) {
     Media(id: $id) {
       ...mediaFields
+      characters(sort: [ROLE, RELEVANCE, ID], perPage: 12) {
+        edges {
+          node {
+            id
+            name {
+              full
+            }
+            image {
+              large
+            }
+          }
+          role
+        }
+      }
+      relations {
+        edges {
+          relationType(version: 2)
+          node {
+            id
+            title {
+              userPreferred
+            }
+            coverImage {
+              large
+            }
+            format
+            type
+          }
+        }
+      }
     }
   }
   ${mediaFragment}

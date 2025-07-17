@@ -19,6 +19,38 @@ export interface StaffEdge {
   node: Staff;
 }
 
+export interface Character {
+  id: number;
+  name: {
+    full: string;
+  };
+  image: {
+    large: string;
+  };
+}
+
+export interface CharacterEdge {
+  role: 'MAIN' | 'SUPPORTING' | 'BACKGROUND';
+  node: Character;
+}
+
+export interface RelatedMedia {
+  id: number;
+  title: {
+    userPreferred: string;
+  };
+  coverImage: {
+    large: string;
+  };
+  format: string;
+  type: 'ANIME' | 'MANGA';
+}
+
+export interface RelatedMediaEdge {
+  relationType: string;
+  node: RelatedMedia;
+}
+
 export interface Media {
   id: number;
   title: {
@@ -56,5 +88,11 @@ export interface Media {
   } | null;
   staff?: {
     edges: StaffEdge[];
+  };
+  characters?: {
+    edges: CharacterEdge[];
+  };
+  relations?: {
+    edges: RelatedMediaEdge[];
   };
 }
