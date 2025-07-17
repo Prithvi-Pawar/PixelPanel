@@ -7,6 +7,18 @@ export interface Page {
   pageInfo: PageInfo;
 }
 
+export interface Staff {
+  id: number;
+  name: {
+    full: string;
+  };
+}
+
+export interface StaffEdge {
+  role: string;
+  node: Staff;
+}
+
 export interface Media {
   id: number;
   title: {
@@ -42,4 +54,7 @@ export interface Media {
     airingAt: number;
     episode: number;
   } | null;
+  staff?: {
+    edges: StaffEdge[];
+  };
 }

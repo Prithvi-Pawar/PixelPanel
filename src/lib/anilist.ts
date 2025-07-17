@@ -11,7 +11,7 @@ export const mediaFragment = `
       native
       userPreferred
     }
-    description(asHtml: true)
+    description(asHtml: false)
     startDate { year month day }
     coverImage { extraLarge large medium color }
     bannerImage
@@ -23,6 +23,17 @@ export const mediaFragment = `
     averageScore
     genres
     trailer { id site thumbnail }
+    staff(sort: [RELEVANCE, ID]) {
+      edges {
+        role
+        node {
+          id
+          name {
+            full
+          }
+        }
+      }
+    }
   }
 `;
 

@@ -2,52 +2,135 @@
 
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
-import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Play, Star } from 'lucide-react';
+import { YoutubeEmbed } from './youtube-embed';
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { StarRating } from './star-rating';
+
+const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <a href={href} className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+    {children}
+  </a>
+);
 
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
 
+  const director = media.staff?.edges.find(edge => edge.role.includes('Director'))?.node;
+  const writer = media.staff?.edges.find(edge => edge.role.includes('Original Creator') || edge.role.includes('Script'))?.node;
+
   return (
-    <div className="space-y-8">
-      <div className="relative h-64 md:h-80 w-full">
-        {media.bannerImage && (
-          <Image
-            src={media.bannerImage}
-            alt={`${media.title.userPreferred} banner`}
-            fill
-            className="object-cover rounded-2xl"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-        <Button onClick={() => router.back()} variant="ghost" size="icon" className="absolute top-4 left-4 rounded-full bg-background/50 backdrop-blur-sm">
-            <ArrowLeft />
-        </Button>
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white bg-black">
+      {media.bannerImage && (
+        <Image
+          src={media.bannerImage}
+          alt={`${media.title.userPreferred} banner`}
+          fill
+          className="object-cover opacity-30"
+          priority
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
+
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
+        <header className="absolute top-0 left-0 right-0 py-6 px-4 sm:px-6 lg:px-8 z-20">
+          <nav className="flex items-center justify-center space-x-6">
+             <NavLink href="/dashboard">Home</NavLink>
+             <NavLink href="#">Cast & Crew</NavLink>
+             <NavLink href="#">Gallery</NavLink>
+             <NavLink href="#">Playlist</NavLink>
+          </nav>
+        </header>
+        
+        <main className="flex flex-col md:flex-row items-center justify-between w-full min-h-screen pt-20 md:pt-0">
+          <div className="w-full md:w-1/2 lg:w-2/5 text-center md:text-left">
+            <h1 className="text-6xl lg:text-8xl font-black tracking-tighter text-shadow-lg uppercase" style={{fontFamily: 'sans-serif', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))'}}>
+              {media.title.english || media.title.romaji}
+            </h1>
+            <p className="text-xl lg:text-2xl font-light text-white/80 mt-2 tracking-widest">
+              {media.title.native}
+            </p>
+            {media.trailer?.id && (
+              <Dialog>
+                <DialogTrigger asChild>
+                   <Button variant="outline" className="mt-8 bg-white/10 border-white/20 backdrop-blur-sm text-white hover:bg-white/20 transition-all rounded-full px-6 py-3">
+                    <Play className="w-5 h-5 mr-2" />
+                    Watch Trailer
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
+                  <YoutubeEmbed embedId={media.trailer.id} />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+          
+          <div className="w-full md:w-1/2 lg:w-2/5 mt-12 md:mt-0 relative">
+             <div className="absolute -right-20 -top-20 md:-right-40 md:-top-40 w-full h-full" style={{
+                background: 'radial-gradient(circle, rgba(29, 161, 242, 0.1) 0%, rgba(29, 161, 242, 0) 60%)'
+             }}></div>
+
+            <div className="relative z-10 p-8 rounded-lg space-y-4">
+                {director && (
+                    <div>
+                        <p className="text-white/70">Directed and Written by:</p>
+                        <h2 className="text-2xl font-bold">{director.name.full}</h2>
+                    </div>
+                )}
+                {writer && !director && (
+                    <div>
+                        <p className="text-white/70">Written by:</p>
+                        <h2 className="text-2xl font-bold">{writer.name.full}</h2>
+                    </div>
+                )}
+
+                <div className="flex items-center gap-4 text-white/70">
+                   {media.averageScore && (
+                     <>
+                        <StarRating score={media.averageScore / 10} />
+                        <span>{media.averageScore / 10}/10</span>
+                     </>
+                   )}
+                </div>
+                
+                <div className="text-sm text-white/70 flex items-center gap-x-4">
+                    <span>{media.startDate.year}</span>
+                    {media.episodes && <span>{media.episodes} episodes</span>}
+                    <span>{media.format}</span>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                    {media.genres.slice(0, 3).map(genre => (
+                        <div key={genre} className="px-4 py-1.5 rounded-full border border-white/20 bg-white/10 text-sm">
+                            {genre}
+                        </div>
+                    ))}
+                </div>
+
+                <p className="text-white/90 pt-4 leading-relaxed line-clamp-4">
+                    {media.description.replace(/<[^>]*>?/gm, '')}
+                </p>
+            </div>
+          </div>
+        </main>
       </div>
 
-      <div className="container mx-auto px-4 -mt-24 md:-mt-32 relative z-10">
-        <div className="flex flex-col md:flex-row gap-8">
-          <div className="flex-shrink-0 w-48 md:w-64">
+       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+          {media.coverImage?.extraLarge && (
             <Image
               src={media.coverImage.extraLarge}
               alt={media.title.userPreferred}
-              width={260}
-              height={390}
-              className="rounded-2xl shadow-2xl aspect-[2/3]"
-              data-ai-hint="anime manga poster"
+              width={500}
+              height={750}
+              className="object-contain w-auto h-auto max-h-[80vh] md:max-h-[90vh] -translate-y-4 filter drop-shadow-[0_25px_25px_rgba(0,0,0,0.75)]"
+              priority
+              data-ai-hint="anime manga character"
             />
-          </div>
-          <div className="flex-grow pt-8 md:pt-24">
-            <h1 className="text-3xl md:text-5xl font-bold font-headline">{media.title.userPreferred}</h1>
-            <div className="flex flex-wrap gap-2 mt-4">
-                {media.genres.map(genre => <Badge key={genre} variant="secondary">{genre}</Badge>)}
-            </div>
-            <p className="mt-6 text-muted-foreground prose prose-invert" dangerouslySetInnerHTML={{ __html: media.description?.replace(/\\n/g, '<br />') || 'No description available.' }} />
-          </div>
+          )}
         </div>
-      </div>
     </div>
   );
 }
