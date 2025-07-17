@@ -47,7 +47,7 @@ export function MediaDetailView({ media }: { media: Media }) {
         
         <main className="flex flex-col md:flex-row items-center justify-between w-full min-h-screen pt-20 md:pt-0">
           <div className="w-full md:w-1/2 lg:w-2/5 text-center md:text-left">
-            <h1 className="text-6xl lg:text-8xl font-black tracking-tighter text-shadow-lg uppercase" style={{fontFamily: 'sans-serif', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))'}}>
+            <h1 className="text-[50px] font-serif font-bold tracking-tight text-shadow-lg" style={{filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))'}}>
               {media.title.english || media.title.romaji}
             </h1>
             <p className="text-xl lg:text-2xl font-light text-white/80 mt-2 tracking-widest">

@@ -20,6 +20,7 @@ export default {
         body: ['var(--font-poppins)', 'sans-serif'],
         headline: ['var(--font-poppins)', 'sans-serif'],
         mono: ['var(--font-roboto-mono)', 'monospace'],
+        serif: ['var(--font-playfair-display)', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",

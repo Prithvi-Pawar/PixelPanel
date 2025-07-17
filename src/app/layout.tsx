@@ -3,7 +3,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
-import { Poppins, Roboto_Mono } from 'next/font/google';
+import { Poppins, Roboto_Mono, Playfair_Display } from 'next/font/google';
 import { Sidebar } from '@/components/sidebar';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
@@ -18,6 +18,11 @@ const poppins = Poppins({
 const robotoMono = Roboto_Mono({
   subsets: ['latin'],
   variable: '--font-roboto-mono',
+})
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair-display',
 })
 
 // export const metadata: Metadata = {
@@ -37,7 +42,7 @@ export default function RootLayout({
   const showLayout = !isLandingPage && !isDetailPage;
 
   return (
-    <html lang="en" className={`dark ${poppins.variable} ${robotoMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`dark ${poppins.variable} ${robotoMono.variable} ${playfairDisplay.variable}`} suppressHydrationWarning>
        <head>
         <title>PixelPanel</title>
         <meta name="description" content="Your Modern Anime Streaming Dashboard" />
