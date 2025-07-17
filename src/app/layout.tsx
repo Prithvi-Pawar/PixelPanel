@@ -32,6 +32,9 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isLandingPage = pathname === '/';
+  const isDetailPage = pathname.startsWith('/media/');
+
+  const showLayout = !isLandingPage && !isDetailPage;
 
   return (
     <html lang="en" className={`dark ${poppins.variable} ${robotoMono.variable}`} suppressHydrationWarning>
@@ -41,12 +44,9 @@ export default function RootLayout({
       </head>
       <body className={cn(
         "font-body antialiased bg-background text-foreground",
-        !isLandingPage && "flex flex-col min-h-screen"
       )}>
-        {isLandingPage ? (
-          children
-        ) : (
-          <>
+        {showLayout ? (
+           <>
             <Header />
             <div className="flex flex-1">
               <Sidebar />
@@ -56,6 +56,8 @@ export default function RootLayout({
             </div>
             <Toaster />
           </>
+        ) : (
+          children
         )}
       </body>
     </html>
