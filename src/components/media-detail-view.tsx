@@ -9,7 +9,7 @@ import { Play } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 import { StarRating } from './star-rating';
-import { useState } from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <a href={href} className="text-sm font-medium text-white/80 hover:text-white transition-colors">
@@ -19,10 +19,11 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const director = media.staff?.edges.find(edge => edge.role.includes('Director'))?.node;
   const writer = media.staff?.edges.find(edge => edge.role.includes('Original Creator') || edge.role.includes('Script'))?.node;
+
+  const fullDescription = media.description.replace(/<[^>]*>?/gm, '');
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-white bg-black">
@@ -123,17 +124,18 @@ export function MediaDetailView({ media }: { media: Media }) {
                 </div>
 
                 <div className="text-white/90 pt-4 leading-relaxed">
-                    <p className={!isDescriptionExpanded ? 'line-clamp-4' : ''}>
-                        {media.description.replace(/<[^>]*>?/gm, '')}
-                    </p>
-                    {(media.description.replace(/<[^>]*>?/gm, '').length > 200) && ( // rough estimate for 4 lines
-                        <button 
-                            onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                            className="text-primary hover:underline mt-1"
-                        >
-                            {isDescriptionExpanded ? '...less' : 'more...'}
-                        </button>
-                    )}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="line-clamp-4 cursor-help">
+                          {fullDescription}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-md bg-black/80 text-white border-white/20 backdrop-blur-sm">
+                        <p>{fullDescription}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
             </div>
           </div>
