@@ -180,20 +180,6 @@ export function MediaDetailView({ media }: { media: Media }) {
             </div>
           </main>
         </div>
-
-        <div className="absolute bottom-0 inset-x-0 z-0 flex items-end justify-center pointer-events-none h-full">
-            {media.coverImage?.extraLarge && (
-              <Image
-                src={media.coverImage.extraLarge}
-                alt={media.title.userPreferred}
-                width={500}
-                height={750}
-                className="object-contain w-auto h-auto max-h-[80vh] md:max-h-[90vh] -translate-y-4 filter drop-shadow-[0_25px_25px_rgba(0,0,0,0.75)]"
-                priority
-                data-ai-hint="anime manga character"
-              />
-            )}
-          </div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
