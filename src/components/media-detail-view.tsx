@@ -39,9 +39,9 @@ export function MediaDetailView({ media }: { media: Media }) {
         <header className="absolute top-0 left-0 right-0 py-6 px-4 sm:px-6 lg:px-8 z-20">
           <nav className="flex items-center justify-center space-x-6">
              <NavLink href="/dashboard">Home</NavLink>
-             <NavLink href="#">Cast & Crew</NavLink>
-             <NavLink href="#">Gallery</NavLink>
-             <NavLink href="#">Playlist</NavLink>
+             <NavLink href="#">Characters</NavLink>
+             <NavLink href="#">Related</NavLink>
+             <NavLink href="#">Where to Watch</NavLink>
           </nav>
         </header>
         
