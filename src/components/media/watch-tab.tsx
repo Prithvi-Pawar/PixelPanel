@@ -6,7 +6,7 @@ const platforms = [
   { name: "Enimoe", key: "enimoe.live", url: "https://enimoe.live" },
   { name: "Miruro", key: "miruro.to", url: "https://www.miruro.to" },
   { name: "Gojo.live", key: "gojo.live", url: "https://gojo.live" },
-  { name: "aninow.tv", key: "aninow.tv", url: "https://aninow.tv" },
+  { name: "AniNow", key: "aninow.tv", url: "https://aninow.tv" },
 ];
 
 function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId: number, slug: string): string {
