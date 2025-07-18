@@ -1,79 +1,53 @@
-
 'use client';
 
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
-import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { Play } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
-import { StarRating } from './star-rating';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { CharacterCard } from './character-card';
-import { RelatedMediaCard } from './related-media-card';
-import { Badge } from './ui/badge';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { OverviewTab } from './media/overview-tab';
+import { CharactersTab } from './media/characters-tab';
+import { RelatedTab } from './media/related-tab';
+import { WatchTab } from './media/watch-tab';
 
-const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <a href={href} className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+const NavLink = ({
+  children,
+  onClick,
+  isActive,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  isActive: boolean;
+}) => (
+  <button
+    onClick={onClick}
+    className={cn(
+      "text-sm font-medium text-white/60 hover:text-white transition-colors pb-2",
+      isActive && "text-white border-b-2 border-primary"
+    )}
+  >
     {children}
-  </a>
+  </button>
 );
-
-const platforms = [
-    { name: "aniplay.lol", url: "https://aniplay.lol", logo: "https://placehold.co/100x40.png?text=aniplay" },
-    { name: "animeonsen.xyz", url: "https://animeonsen.xyz", logo: "https://placehold.co/100x40.png?text=animeonsen" },
-    { name: "enimoe.live", url: "https://enimoe.live", logo: "https://placehold.co/100x40.png?text=enimoe" },
-    { name: "miruro.to", url: "https://www.miruro.to", logo: "https://placehold.co/100x40.png?text=miruro" },
-    { name: "animetsu.cc", url: "https://animetsu.cc", logo: "https://placehold.co/100x40.png?text=animetsu" },
-    { name: "aninow.tv", url: "https://aninow.tv", logo: "https://placehold.co/100x40.png?text=aninow" },
-];
-
-function generatePlatformUrl(platformName: string, platformUrl: string, anilistId: number, slug: string): string {
-    switch (platformName) {
-        case 'aniplay.lol':
-            return `${platformUrl}/anime/info/${anilistId}`;
-        case 'animeonsen.xyz':
-            return platformUrl; // Links to homepage
-        case 'enimoe.live':
-            return `https://enimoe.live/watch?type=anime&id=${anilistId}`;
-        case 'miruro.to':
-            return `https://www.miruro.to/watch?id=${anilistId}`;
-        case 'animetsu.cc':
-            return `https://animetsu.cc/anime/${anilistId}`;
-        case 'aninow.tv':
-            return `https://aninow.tv/a/${slug}`;
-        default:
-            return platformUrl;
-    }
-}
 
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
-
-  const director = media.staff?.edges.find(edge => edge.role.includes('Director'))?.node;
-  const writer = media.staff?.edges.find(edge => edge.role.includes('Original Creator') || edge.role.includes('Script'))?.node;
-
-  const fullDescription = media.description.replace(/<[^>]*>?/gm, '');
-
-  const mainCharacters = media.characters?.edges.filter(edge => edge.role === 'MAIN') || [];
-  const supportingCharacters = media.characters?.edges.filter(edge => edge.role === 'SUPPORTING') || [];
-  const relatedMedia = media.relations?.edges || [];
-
-  const slug = media.title.romaji.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
     <div className="bg-background text-white">
-      <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans">
+      <div className="relative min-h-[60vh] md:min-h-[70vh] w-full flex flex-col items-center justify-center overflow-hidden font-sans">
         {media.trailer?.site === 'youtube' && media.trailer.id ? (
           <iframe
-              className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2] opacity-30"
-              src={`https://www.youtube.com/embed/${media.trailer.id}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${media.trailer.id}`}
-              title="YouTube video player background"
-              frameBorder="0"
-              allow="autoplay; encrypted-media; loop"
-              allowFullScreen={false}
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2] opacity-30"
+            src={`https://www.youtube.com/embed/${media.trailer.id}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${media.trailer.id}`}
+            title="YouTube video player background"
+            frameBorder="0"
+            allow="autoplay; encrypted-media; loop"
+            allowFullScreen={false}
           ></iframe>
         ) : media.bannerImage && (
           <Image
@@ -85,145 +59,60 @@ export function MediaDetailView({ media }: { media: Media }) {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background to-transparent" />
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
-          <header className="absolute top-0 left-0 right-0 py-6 px-4 sm:px-6 lg:px-8 z-20">
-            <nav className="flex items-center justify-center space-x-6">
-              <NavLink href="/dashboard">Home</NavLink>
-              <NavLink href="#characters">Characters</NavLink>
-              <NavLink href="#related">Related</NavLink>
-              <NavLink href="#watch">Where to Watch</NavLink>
-            </nav>
-          </header>
-          
-          <main className="flex flex-col md:flex-row items-center justify-between w-full min-h-screen pt-20 md:pt-0">
-            <div className="w-full md:w-1/2 lg:w-2/5 text-center md:text-left">
-              <h1 className="text-[50px] font-serif font-bold tracking-tight text-shadow-lg" style={{filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))'}}>
-                {media.title.english || media.title.romaji}
-              </h1>
-              <p className="text-xl lg:text-2xl font-light text-white/80 mt-2 tracking-widest">
-                {media.title.native}
-              </p>
-              {media.trailer?.id && (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="mt-8 bg-white/10 border-white/20 backdrop-blur-sm text-white hover:bg-white/20 transition-all rounded-full px-6 py-3">
-                      <Play className="w-5 h-5 mr-2" />
-                      Watch Trailer
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
-                    <YoutubeEmbed embedId={media.trailer.id} />
-                  </DialogContent>
-                </Dialog>
-              )}
-            </div>
-            
-            <div className="w-full md:w-1/2 lg:w-2/5 mt-12 md:mt-0 relative">
-              <div className="absolute -right-20 -top-20 md:-right-40 md:-top-40 w-full h-full" style={{
-                  background: 'radial-gradient(circle, rgba(29, 161, 242, 0.1) 0%, rgba(29, 161, 242, 0) 60%)'
-              }}></div>
-
-              <div className="relative z-10 p-8 rounded-lg space-y-4">
-                  {director && (
-                      <div>
-                          <p className="text-white/70">Directed and Written by:</p>
-                          <h2 className="text-2xl font-bold">{director.name.full}</h2>
-                      </div>
-                  )}
-                  {writer && !director && (
-                      <div>
-                          <p className="text-white/70">Written by:</p>
-                          <h2 className="text-2xl font-bold">{writer.name.full}</h2>
-                      </div>
-                  )}
-
-                  <div className="flex items-center gap-4 text-white/70">
-                    {media.averageScore && (
-                      <>
-                          <StarRating score={media.averageScore / 10} />
-                          <span>{media.averageScore / 10}/10</span>
-                      </>
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex items-end">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="w-48 flex-shrink-0">
+                     <Image
+                        src={media.coverImage.extraLarge}
+                        alt={media.title.userPreferred}
+                        width={200}
+                        height={300}
+                        className="rounded-lg shadow-2xl shadow-black/50"
+                        priority
+                        data-ai-hint="anime manga poster"
+                    />
+                </div>
+                <div className="text-center md:text-left">
+                    <h1 className="text-3xl md:text-4xl font-bold font-headline tracking-wide text-shadow-lg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'}}>
+                        {media.title.english || media.title.romaji}
+                    </h1>
+                     <p className="text-lg font-light text-white/80 mt-1">
+                        {media.title.native}
+                    </p>
+                    {media.trailer?.id && (
+                        <Dialog>
+                        <DialogTrigger asChild>
+                             <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+                                <Play className="h-4 w-4" />
+                                Watch Trailer
+                            </button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
+                            <YoutubeEmbed embedId={media.trailer.id} />
+                        </DialogContent>
+                        </Dialog>
                     )}
-                  </div>
-                  
-                  <div className="text-sm text-white/70 flex items-center gap-x-4">
-                      <span>{media.startDate.year}</span>
-                      {media.episodes && <span>{media.episodes} episodes</span>}
-                      <span>{media.format}</span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                      {media.genres.slice(0, 3).map(genre => (
-                           <Badge key={genre} variant="secondary" className="px-3 py-1 text-sm bg-white/10 text-white/80 backdrop-blur-sm">
-                              {genre}
-                           </Badge>
-                      ))}
-                  </div>
-
-                  <div className="text-white/90 pt-4 leading-relaxed">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <p className="line-clamp-4 cursor-help">
-                            {fullDescription}
-                          </p>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-md bg-black/80 text-white border-white/20 backdrop-blur-sm">
-                          <p>{fullDescription}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-              </div>
+                </div>
             </div>
-          </main>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
-        {/* Characters Section */}
-        {mainCharacters.length > 0 && (
-            <section id="characters" className="space-y-8">
-                <h2 className="text-3xl font-bold font-headline">Characters</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                    {mainCharacters.map(edge => <CharacterCard key={edge.node.id} character={edge.node} role={edge.role} />)}
-                    {supportingCharacters.map(edge => <CharacterCard key={edge.node.id} character={edge.node} role={edge.role} />)}
-                </div>
-            </section>
-        )}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <nav className="flex items-center space-x-8 border-b border-white/10 mb-8">
+          <NavLink onClick={() => setActiveTab('overview')} isActive={activeTab === 'overview'}>Overview</NavLink>
+          <NavLink onClick={() => setActiveTab('characters')} isActive={activeTab === 'characters'}>Characters</NavLink>
+          <NavLink onClick={() => setActiveTab('related')} isActive={activeTab === 'related'}>Related</NavLink>
+          <NavLink onClick={() => setActiveTab('watch')} isActive={activeTab === 'watch'}>Where to Watch</NavLink>
+        </nav>
 
-        {/* Related Media Section */}
-        {relatedMedia.length > 0 && (
-             <section id="related" className="space-y-8">
-                <h2 className="text-3xl font-bold font-headline">Related Media</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                   {relatedMedia.map(edge => <RelatedMediaCard key={`${edge.relationType}-${edge.node.id}`} relation={edge} />)}
-                </div>
-            </section>
-        )}
-
-        {/* Where to Watch Section */}
-        <section id="watch" className="space-y-8">
-            <h2 className="text-3xl font-bold font-headline">Where to Watch</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {platforms.map(platform => {
-                    const url = generatePlatformUrl(platform.name, platform.url, media.id, slug);
-                    return (
-                        <a 
-                            key={platform.name}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-card/50 p-4 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
-                        >
-                            <span className="font-semibold text-lg">{platform.name}</span>
-                        </a>
-                    );
-                })}
-            </div>
-        </section>
+        <div>
+            {activeTab === 'overview' && <OverviewTab media={media} />}
+            {activeTab === 'characters' && <CharactersTab media={media} />}
+            {activeTab === 'related' && <RelatedTab media={media} />}
+            {activeTab === 'watch' && <WatchTab media={media} />}
+        </div>
       </div>
     </div>
   );
