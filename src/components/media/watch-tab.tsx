@@ -1,16 +1,16 @@
 import type { Media } from '@/lib/types';
 
 const platforms = [
-  { name: "aniplay.lol", url: "https://aniplay.lol" },
-  { name: "animeonsen.xyz", url: "https://animeonsen.xyz" },
-  { name: "enimoe.live", url: "https://enimoe.live" },
-  { name: "miruro.to", url: "https://www.miruro.to" },
-  { name: "animetsu.cc", url: "https://animetsu.cc" },
-  { name: "aninow.tv", url: "https://aninow.tv" },
+  { name: "Aniplay", key: "aniplay.lol", url: "https://aniplay.lol" },
+  { name: "ANIMEONSEN", key: "animeonsen.xyz", url: "https://animeonsen.xyz" },
+  { name: "Enimoe", key: "enimoe.live", url: "https://enimoe.live" },
+  { name: "Miruro", key: "miruro.to", url: "https://www.miruro.to" },
+  { name: "Gojo.live", key: "gojo.live", url: "https://gojo.live" },
+  { name: "aninow.tv", key: "aninow.tv", url: "https://aninow.tv" },
 ];
 
-function generatePlatformUrl(platformName: string, platformUrl: string, anilistId: number, slug: string): string {
-  switch (platformName) {
+function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId: number, slug: string): string {
+  switch (platformKey) {
     case 'aniplay.lol':
       return `${platformUrl}/anime/info/${anilistId}`;
     case 'animeonsen.xyz':
@@ -19,8 +19,8 @@ function generatePlatformUrl(platformName: string, platformUrl: string, anilistI
       return `https://enimoe.live/watch?type=anime&id=${anilistId}`;
     case 'miruro.to':
       return `https://www.miruro.to/watch?id=${anilistId}`;
-    case 'animetsu.cc':
-      return `https://animetsu.cc/anime/${anilistId}`;
+    case 'gojo.live':
+       return `${platformUrl}/anime/${slug}`;
     case 'aninow.tv':
       return `https://aninow.tv/a/${slug}`;
     default:
@@ -34,10 +34,10 @@ export function WatchTab({ media }: { media: Media }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {platforms.map(platform => {
-        const url = generatePlatformUrl(platform.name, platform.url, media.id, slug);
+        const url = generatePlatformUrl(platform.key, platform.url, media.id, slug);
         return (
           <a
-            key={platform.name}
+            key={platform.key}
             href={url}
             target="_blank"
             rel="noopener noreferrer"
