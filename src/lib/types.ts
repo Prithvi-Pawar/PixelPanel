@@ -19,6 +19,16 @@ export interface StaffEdge {
   node: Staff;
 }
 
+export interface VoiceActor {
+    id: number;
+    name: {
+        full: string;
+    };
+    image: {
+        large: string;
+    }
+}
+
 export interface Character {
   id: number;
   name: {
@@ -32,6 +42,7 @@ export interface Character {
 export interface CharacterEdge {
   role: 'MAIN' | 'SUPPORTING' | 'BACKGROUND';
   node: Character;
+  voiceActors: VoiceActor[];
 }
 
 export interface RelatedMedia {

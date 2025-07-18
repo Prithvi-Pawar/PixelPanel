@@ -7,20 +7,6 @@ const MEDIA_DETAIL_QUERY = `
   query GetMediaDetail($id: Int) {
     Media(id: $id) {
       ...mediaFields
-      characters(sort: [ROLE, RELEVANCE, ID], perPage: 12) {
-        edges {
-          node {
-            id
-            name {
-              full
-            }
-            image {
-              large
-            }
-          }
-          role
-        }
-      }
       relations {
         edges {
           relationType(version: 2)
@@ -34,6 +20,29 @@ const MEDIA_DETAIL_QUERY = `
             }
             format
             type
+          }
+        }
+      }
+      characters(sort: [ROLE, RELEVANCE, ID], perPage: 25) {
+        edges {
+          node {
+            id
+            name {
+              full
+            }
+            image {
+              large
+            }
+          }
+          role
+          voiceActors(language: JAPANESE, sort: [RELEVANCE, ID]) {
+            id
+            name {
+              full
+            }
+            image {
+              large
+            }
           }
         }
       }
