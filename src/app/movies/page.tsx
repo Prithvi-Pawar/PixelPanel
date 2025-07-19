@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -100,7 +101,7 @@ export default function MoviesPage() {
 
       if (page <= 3) {
         startPage = 2;
-        endPage = 4;
+        endPage = Math.min(4, lastPage - 1);
       }
       
       if (page >= lastPage - 2) {
@@ -109,13 +110,13 @@ export default function MoviesPage() {
       }
 
       pages.push(1);
-      if (page > 3) pages.push('...');
+      if (page > 3 && startPage > 2) pages.push('...');
 
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
 
-      if (page < lastPage - 2) pages.push('...');
+      if (page < lastPage - 2 && endPage < lastPage - 1) pages.push('...');
       pages.push(lastPage);
     }
     

@@ -134,7 +134,7 @@ export default function SearchPage() {
 
       if (page < 4) {
         startPage = 2;
-        endPage = Math.min(5, lastPage -1);
+        endPage = Math.min(5, lastPage - 1);
       }
       
       if (page > lastPage - 3) {
