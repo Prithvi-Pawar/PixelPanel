@@ -67,8 +67,8 @@ export default function ProfilePage() {
             <div className="relative h-64 md:h-80 w-full overflow-hidden">
                 {trailerId ? (
                     <iframe
-                        className="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover opacity-50"
-                        style={{ minHeight: '177.77%', minWidth: '177.77%' }}
+                        className="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover"
+                        style={{ minWidth: '177.77vw', minHeight: '100vh' }}
                         src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${trailerId}`}
                         title="YouTube video player background"
                         frameBorder="0"
@@ -90,7 +90,7 @@ export default function ProfilePage() {
                         </Avatar>
                         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                             <DialogTrigger asChild>
-                                 <Button variant="outline" size="icon" className="absolute bottom-2 right-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 backdrop-blur-sm">
+                                 <Button variant="outline" size="icon" className="absolute bottom-2 right-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 backdrop-blur-sm hidden">
                                     <Edit className="h-4 w-4"/>
                                     <span className="sr-only">Edit Profile</span>
                                 </Button>
@@ -104,18 +104,6 @@ export default function ProfilePage() {
                     <div className="mt-4 text-center">
                         <h1 className="text-3xl md:text-4xl font-bold">{profile.name}</h1>
                         <p className="text-muted-foreground mt-1 max-w-lg mx-auto">{profile.bio}</p>
-                    </div>
-
-                     <div className="mt-4 flex gap-2">
-                       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Profile</Button>
-                            </DialogTrigger>
-                             <DialogContent>
-                                <EditProfileForm currentProfile={profile} onSave={handleSave} onCancel={() => setIsEditDialogOpen(false)} />
-                            </DialogContent>
-                        </Dialog>
-                        <Button><Plus className="mr-2 h-4 w-4" /> Add to List</Button>
                     </div>
                 </div>
             </div>
