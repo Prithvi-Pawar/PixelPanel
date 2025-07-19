@@ -3,7 +3,7 @@
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Play } from 'lucide-react';
+import { Play, Heart, Share2 } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 import { useState } from 'react';
@@ -12,6 +12,8 @@ import { OverviewTab } from './media/overview-tab';
 import { CharactersTab } from './media/characters-tab';
 import { RelatedTab } from './media/related-tab';
 import { WatchTab } from './media/watch-tab';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from './ui/button';
 
 const NavLink = ({
   children,
@@ -33,9 +35,37 @@ const NavLink = ({
   </button>
 );
 
+const AnilistIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+        <path d="M7.203 5.565L3.75 18.25h2.475l.885-2.655h3.69l.885 2.655h2.475L10.798 5.565H8.228l-.51 1.53h.001L7.203 5.565zm.435 7.02h2.73l-1.365-4.095L7.638 12.585zM19.5 5.75l-1.83 5.49h-1.42V5.75h-2.25v12.5h2.25v-6.26h1.42l1.83 5.49h2.25V5.75h-2.25v.01z" />
+    </svg>
+);
+
+
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isLiked, setIsLiked] = useState(false);
+  const { toast } = useToast();
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+        title: "Link Copied!",
+        description: "The page URL has been copied to your clipboard.",
+    });
+  };
 
   return (
     <div className="bg-background text-white">
@@ -81,19 +111,37 @@ export function MediaDetailView({ media }: { media: Media }) {
                      <p className="text-lg font-light text-white/80 mt-1">
                         {media.title.native}
                     </p>
-                    {media.trailer?.id && (
-                        <Dialog>
-                        <DialogTrigger asChild>
-                             <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
-                                <Play className="h-4 w-4" />
-                                Watch Trailer
-                            </button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
-                            <YoutubeEmbed embedId={media.trailer.id} />
-                        </DialogContent>
-                        </Dialog>
-                    )}
+                    <div className="flex items-center gap-3 mt-4 justify-center md:justify-start">
+                        {media.trailer?.id && (
+                            <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20">
+                                    <Play className="h-4 w-4" />
+                                    Watch Trailer
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
+                                <YoutubeEmbed embedId={media.trailer.id} />
+                            </DialogContent>
+                            </Dialog>
+                        )}
+                        <a href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20">
+                                <AnilistIcon className="h-5 w-5" />
+                                <span className="sr-only">View on AniList</span>
+                            </Button>
+                        </a>
+                    </div>
+                    <div className="flex items-center gap-3 mt-3 justify-center md:justify-start">
+                         <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={() => setIsLiked(!isLiked)}>
+                            <Heart className={cn("h-5 w-5", isLiked && "fill-red-500 text-red-500")} />
+                            <span className="sr-only">Like</span>
+                        </Button>
+                        <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={handleShare}>
+                            <Share2 className="h-5 w-5" />
+                            <span className="sr-only">Share</span>
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
