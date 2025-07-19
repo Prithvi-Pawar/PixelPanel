@@ -2,9 +2,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Edit, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { EditProfileForm } from "@/components/edit-profile-form";
 import type { Media } from "@/lib/types";
@@ -83,23 +81,22 @@ export default function ProfilePage() {
 
             <div className="relative px-4 sm:px-6 lg:px-8 pb-8">
                 <div className="flex flex-col items-center -mt-20">
-                     <div className="relative group">
-                        <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-background ring-4 ring-primary">
-                            <AvatarImage src={profile.avatarUrl} data-ai-hint="anime avatar" />
-                            <AvatarFallback>{profile.name.charAt(0).toUpperCase()}</AvatarFallback>
-                        </Avatar>
-                        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                            <DialogTrigger asChild>
-                                 <Button variant="outline" size="icon" className="absolute bottom-2 right-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 backdrop-blur-sm hidden">
-                                    <Edit className="h-4 w-4"/>
-                                    <span className="sr-only">Edit Profile</span>
-                                </Button>
-                            </DialogTrigger>
-                             <DialogContent>
-                                <EditProfileForm currentProfile={profile} onSave={handleSave} onCancel={() => setIsEditDialogOpen(false)} />
-                            </DialogContent>
-                        </Dialog>
-                    </div>
+                     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                        <DialogTrigger asChild>
+                            <div className="relative group cursor-pointer">
+                                <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-background ring-4 ring-primary">
+                                    <AvatarImage src={profile.avatarUrl} data-ai-hint="anime avatar" />
+                                    <AvatarFallback>{profile.name.charAt(0).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                                <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-white font-semibold">Change</span>
+                                </div>
+                            </div>
+                        </DialogTrigger>
+                         <DialogContent>
+                            <EditProfileForm currentProfile={profile} onSave={handleSave} onCancel={() => setIsEditDialogOpen(false)} />
+                        </DialogContent>
+                    </Dialog>
 
                     <div className="mt-4 text-center">
                         <h1 className="text-3xl md:text-4xl font-bold">{profile.name}</h1>
