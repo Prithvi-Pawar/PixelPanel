@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Media } from '@/lib/types';
@@ -6,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Play, Heart, Share2 } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { OverviewTab } from './media/overview-tab';
 import { CharactersTab } from './media/characters-tab';
@@ -40,6 +41,31 @@ export function MediaDetailView({ media }: { media: Media }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLiked, setIsLiked] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const likedAnime: Media[] = JSON.parse(localStorage.getItem('likedAnime') || '[]');
+    const isAlreadyLiked = likedAnime.some(anime => anime.id === media.id);
+    setIsLiked(isAlreadyLiked);
+  }, [media.id]);
+
+  const toggleLike = () => {
+    const likedAnime: Media[] = JSON.parse(localStorage.getItem('likedAnime') || '[]');
+    const isAlreadyLiked = likedAnime.some(anime => anime.id === media.id);
+    
+    let updatedLikedAnime: Media[];
+
+    if (isAlreadyLiked) {
+      updatedLikedAnime = likedAnime.filter(anime => anime.id !== media.id);
+      setIsLiked(false);
+      toast({ title: "Removed from Likes" });
+    } else {
+      updatedLikedAnime = [...likedAnime, media];
+      setIsLiked(true);
+      toast({ title: "Added to Likes" });
+    }
+
+    localStorage.setItem('likedAnime', JSON.stringify(updatedLikedAnime));
+  };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -115,7 +141,7 @@ export function MediaDetailView({ media }: { media: Media }) {
                         </a>
                     </div>
                     <div className="flex items-center gap-3 mt-3 justify-center md:justify-start">
-                         <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={() => setIsLiked(!isLiked)}>
+                         <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={toggleLike}>
                             <Heart className={cn("h-5 w-5", isLiked && "fill-red-500 text-red-500")} />
                             <span className="sr-only">Like</span>
                         </Button>
