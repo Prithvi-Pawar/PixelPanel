@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
         hostname: 's4.anilist.co',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'logo.svgcdn.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

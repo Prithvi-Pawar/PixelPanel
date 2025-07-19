@@ -35,20 +35,6 @@ const NavLink = ({
   </button>
 );
 
-const AnilistIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-        <path d="M12.42,5.25L10.2,12.3h4.4l-2.22-7.05h-0.03ZM8.33,18.25h2.52l1.08-3.24h4.92l1.08,3.24h2.52L15.3,5.25H9.47L4.39,18.25Z" fill="white"/>
-        <path d="M9.47,5.25h5.83L20.47,18.25h-2.52l-1.08-3.24h-4.92L10.87,18.25H8.35l1.12-13Z" fill="hsl(var(--primary))"/>
-    </svg>
-);
-
-
 export function MediaDetailView({ media }: { media: Media }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
@@ -122,8 +108,8 @@ export function MediaDetailView({ media }: { media: Media }) {
                             </Dialog>
                         )}
                         <a href={`https://anilist.co/anime/${media.id}`} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20">
-                                <AnilistIcon className="h-5 w-5" />
+                            <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 p-2">
+                                <Image src="https://logo.svgcdn.com/s/anilist-dark.png" alt="Anilist Logo" width={24} height={24} className="object-contain" />
                                 <span className="sr-only">View on AniList</span>
                             </Button>
                         </a>
