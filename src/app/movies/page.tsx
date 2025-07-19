@@ -90,33 +90,38 @@ export default function MoviesPage() {
   const renderPagination = () => {
     const pages = [];
     const maxVisiblePages = 5;
+    const sideButtons = 2; // buttons on each side of the current page
 
     if (lastPage <= maxVisiblePages) {
       for (let i = 1; i <= lastPage; i++) {
         pages.push(i);
       }
     } else {
-      let startPage = Math.max(2, page - 1);
-      let endPage = Math.min(lastPage - 1, page + 1);
+      pages.push(1);
 
-      if (page <= 3) {
-        startPage = 2;
-        endPage = Math.min(4, lastPage - 1);
+      let startPage = Math.max(2, page - sideButtons);
+      let endPage = Math.min(lastPage - 1, page + sideButtons);
+      
+      if (page <= sideButtons + 1) {
+        endPage = Math.min(lastPage - 1, maxVisiblePages - 1);
       }
       
-      if (page >= lastPage - 2) {
-        startPage = lastPage - 3;
-        endPage = lastPage - 1;
+      if (page >= lastPage - sideButtons) {
+        startPage = Math.max(2, lastPage - maxVisiblePages + 2);
       }
-
-      pages.push(1);
-      if (page > 3 && startPage > 2) pages.push('...');
+      
+      if (startPage > 2) {
+        pages.push('...');
+      }
 
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
 
-      if (page < lastPage - 2 && endPage < lastPage - 1) pages.push('...');
+      if (endPage < lastPage - 1) {
+        pages.push('...');
+      }
+      
       pages.push(lastPage);
     }
     
