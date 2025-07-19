@@ -64,10 +64,11 @@ export default function ProfilePage() {
 
     return (
         <div className="flex-1 -m-8">
-            <div className="relative h-64 md:h-80 w-full">
+            <div className="relative h-64 md:h-80 w-full overflow-hidden">
                 {trailerId ? (
                     <iframe
-                        className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2] opacity-50"
+                        className="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover opacity-50"
+                        style={{ minHeight: '177.77%', minWidth: '177.77%' }}
                         src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=${trailerId}`}
                         title="YouTube video player background"
                         frameBorder="0"
