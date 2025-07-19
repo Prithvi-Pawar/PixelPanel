@@ -37,18 +37,14 @@ const NavLink = ({
 
 const AnilistIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-        <path d="M7.203 5.565L3.75 18.25h2.475l.885-2.655h3.69l.885 2.655h2.475L10.798 5.565H8.228l-.51 1.53h.001L7.203 5.565zm.435 7.02h2.73l-1.365-4.095L7.638 12.585zM19.5 5.75l-1.83 5.49h-1.42V5.75h-2.25v12.5h2.25v-6.26h1.42l1.83 5.49h2.25V5.75h-2.25v.01z" />
+        <path d="M12.42,5.25L10.2,12.3h4.4l-2.22-7.05h-0.03ZM8.33,18.25h2.52l1.08-3.24h4.92l1.08,3.24h2.52L15.3,5.25H9.47L4.39,18.25Z" fill="white"/>
+        <path d="M9.47,5.25h5.83L20.47,18.25h-2.52l-1.08-3.24h-4.92L10.87,18.25H8.35l1.12-13Z" fill="hsl(var(--primary))"/>
     </svg>
 );
 
