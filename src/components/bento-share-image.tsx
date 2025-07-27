@@ -29,13 +29,21 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                     </div>
                 </div>
 
-                {/* Top Right: Synopsis */}
-                <div className="row-span-2 bg-[#1C1C1C] rounded-3xl p-8 flex flex-col shadow-lg">
-                    <h2 className="text-2xl font-semibold text-gray-400 mb-4">SYNOPSIS</h2>
-                    <p className="text-2xl text-gray-300 leading-relaxed line-clamp-[10]">
-                        {synopsis}
-                    </p>
+                {/* Top Right: User Info */}
+                <div className="bg-[#1C1C1C] rounded-3xl p-8 flex flex-col justify-center items-center shadow-lg gap-4">
+                     <div className="w-40 h-40 rounded-full overflow-hidden relative">
+                        <Image
+                            src={user.avatarUrl}
+                            alt={user.name}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                            data-ai-hint="user avatar"
+                        />
+                     </div>
+                    <p className="text-4xl font-semibold text-white">{user.name}</p>
                 </div>
+
 
                 {/* Center Left: Cover Image */}
                 <div className="row-span-2 col-start-1 row-start-2 relative rounded-3xl overflow-hidden shadow-lg">
@@ -44,11 +52,19 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                         alt={media.title.userPreferred}
                         fill
                         className="object-cover"
-                        style={{ width: '100%', height: '100%' }}
                         unoptimized
                         data-ai-hint="anime manga poster"
                     />
                 </div>
+                
+                 {/* Center Right: Synopsis */}
+                <div className="bg-[#1C1C1C] rounded-3xl p-8 flex flex-col shadow-lg col-start-2 row-start-2">
+                    <h2 className="text-2xl font-semibold text-gray-400 mb-4">SYNOPSIS</h2>
+                    <p className="text-2xl text-gray-300 leading-relaxed line-clamp-[6]">
+                        {synopsis}
+                    </p>
+                </div>
+
 
                 {/* Bottom Right: Details */}
                 <div className="bg-[#1C1C1C] rounded-3xl p-8 flex flex-col justify-between shadow-lg">
@@ -61,21 +77,6 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                         <p className="text-3xl text-white">{statusText}</p>
                     </div>
                 </div>
-            </div>
-            
-            {/* Footer: User Info */}
-            <div className="mt-8 flex items-center gap-4">
-                 <div className="w-20 h-20 rounded-full overflow-hidden relative">
-                    <Image
-                        src={user.avatarUrl}
-                        alt={user.name}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                        data-ai-hint="user avatar"
-                    />
-                 </div>
-                <p className="text-4xl font-semibold text-white">{user.name}</p>
             </div>
         </div>
     );
