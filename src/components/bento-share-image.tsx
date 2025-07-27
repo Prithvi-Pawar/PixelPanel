@@ -42,6 +42,7 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                         alt={media.title.userPreferred}
                         fill
                         className="object-cover"
+                        style={{ width: '100%', height: '100%' }}
                         unoptimized
                         data-ai-hint="anime manga poster"
                     />
