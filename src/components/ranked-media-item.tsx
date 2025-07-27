@@ -1,3 +1,4 @@
+
 import type { Media } from '@/lib/types';
 import { Badge } from './ui/badge';
 import Image from 'next/image';
@@ -33,9 +34,9 @@ export function RankedMediaItem({ media, rank }: RankedMediaItemProps) {
           {media.averageScore && <><span>•</span><span>{media.averageScore}%</span></>}
         </div>
       </div>
-      <Link href={`/media/${media.id}`} passHref legacyBehavior>
-        <Button asChild variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <a><Eye className="mr-2 h-4 w-4" /> View</a>
+      <Link href={`/media/${media.id}`}>
+        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <Eye className="mr-2 h-4 w-4" /> View
         </Button>
       </Link>
     </div>
