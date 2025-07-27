@@ -23,14 +23,16 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                 
                 {/* Top Left: Title */}
                 <div className="bg-[#1C1C1C] rounded-3xl p-8 flex flex-col justify-between shadow-lg">
-                    <p className="text-3xl text-gray-400">{media.startDate?.year}</p>
-                    <h1 className="text-7xl font-bold text-white break-words">{media.title.userPreferred}</h1>
+                    <div>
+                        <p className="text-3xl text-gray-400">{media.startDate?.year}</p>
+                        <h1 className="text-6xl font-bold text-white mt-2 break-words line-clamp-4">{media.title.userPreferred}</h1>
+                    </div>
                 </div>
 
                 {/* Top Right: Synopsis */}
                 <div className="row-span-2 bg-[#1C1C1C] rounded-3xl p-8 flex flex-col shadow-lg">
                     <h2 className="text-2xl font-semibold text-gray-400 mb-4">SYNOPSIS</h2>
-                    <p className="text-2xl text-gray-300 leading-relaxed">
+                    <p className="text-2xl text-gray-300 leading-relaxed line-clamp-[10]">
                         {synopsis}
                     </p>
                 </div>
@@ -62,8 +64,8 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
             </div>
             
             {/* Footer: User Info */}
-            <div className="mt-6 flex items-center gap-4">
-                 <div className="w-16 h-16 rounded-full overflow-hidden relative">
+            <div className="mt-8 flex items-center gap-4">
+                 <div className="w-20 h-20 rounded-full overflow-hidden relative">
                     <Image
                         src={user.avatarUrl}
                         alt={user.name}
@@ -73,7 +75,7 @@ export const BentoShareImage = forwardRef<HTMLDivElement, BentoShareImageProps>(
                         data-ai-hint="user avatar"
                     />
                  </div>
-                <p className="text-3xl font-semibold text-white">{user.name}</p>
+                <p className="text-4xl font-semibold text-white">{user.name}</p>
             </div>
         </div>
     );
