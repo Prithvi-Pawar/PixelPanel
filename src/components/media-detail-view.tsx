@@ -4,9 +4,9 @@
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Play, Heart, Share2, Download } from 'lucide-react';
+import { Play, Heart, Share2, Download, X } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from './ui/dialog';
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { OverviewTab } from './media/overview-tab';
@@ -48,6 +48,9 @@ export function MediaDetailView({ media }: { media: Media }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
 
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile');
@@ -87,19 +90,13 @@ export function MediaDetailView({ media }: { media: Media }) {
   };
 
   const handleShare = async () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-        title: "Link Copied!",
-        description: "The page URL has been copied to your clipboard.",
-    });
-
     if (!bentoRef.current) return;
     
     setIsGenerating(true);
     try {
         const dataUrl = await toPng(bentoRef.current, { 
             cacheBust: true,
-            pixelRatio: 2, 
+            pixelRatio: 2,
             style: {
                 opacity: '1',
                 transform: 'scale(1)',
@@ -108,14 +105,8 @@ export function MediaDetailView({ media }: { media: Media }) {
                 left: '0'
             }
         });
-        const link = document.createElement('a');
-        link.download = `${media.title.romaji.toLowerCase().replace(/ /g, '-')}-share.png`;
-        link.href = dataUrl;
-        link.click();
-        toast({
-            title: "Image Downloading",
-            description: "Your shareable image is being downloaded."
-        });
+        setPreviewImage(dataUrl);
+        setIsPreviewOpen(true);
     } catch (err) {
         console.error('Failed to generate image', err);
         toast({
@@ -128,6 +119,18 @@ export function MediaDetailView({ media }: { media: Media }) {
     }
   };
 
+  const handleDownload = () => {
+    if (!previewImage) return;
+    const link = document.createElement('a');
+    link.download = `${media.title.romaji.toLowerCase().replace(/ /g, '-')}-share.png`;
+    link.href = previewImage;
+    link.click();
+    toast({
+        title: "Image Downloading",
+        description: "Your shareable image is being downloaded."
+    });
+  };
+
 
   return (
     <>
@@ -138,6 +141,39 @@ export function MediaDetailView({ media }: { media: Media }) {
             user={userProfile || { name: 'Anonymous', avatarUrl: 'https://placehold.co/100x100.png', bio: '' }} 
         />
       </div>
+
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="bg-background/80 border-white/20 p-4 max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Share Preview</DialogTitle>
+          </DialogHeader>
+          {previewImage && (
+            <div className="flex items-center justify-center p-4">
+              <Image 
+                src={previewImage} 
+                alt="Share preview" 
+                width={1080} 
+                height={1350} 
+                className="rounded-lg max-w-full h-auto"
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  maxHeight: '70vh'
+                }}
+              />
+            </div>
+          )}
+          <DialogFooter className="sm:justify-between gap-2">
+            <DialogClose asChild>
+                <Button type="button" variant="secondary">Close</Button>
+            </DialogClose>
+            <Button onClick={handleDownload}>
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="bg-background text-white">
         <div className="relative min-h-[60vh] md:min-h-[70vh] w-full flex flex-col items-center justify-center overflow-hidden font-sans">
