@@ -46,7 +46,7 @@ export async function fetchAnilistData<T>(query: string, variables?: Record<stri
         'Accept': 'application/json',
       },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 60 }, // Revalidate every minute
     });
 
     if (!res.ok) {
