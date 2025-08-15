@@ -58,7 +58,10 @@ export function WatchTab({ media }: { media: Media }) {
           rel="noopener noreferrer"
           className="group bg-card/50 p-4 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
         >
-          <span className="font-semibold text-lg group-hover:underline">Kawaiines</span>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-lg group-hover:underline">Kawaiines</span>
+            <span className="text-muted-foreground font-medium">(Hindi)</span>
+          </div>
         </a>
     </div>
   );
