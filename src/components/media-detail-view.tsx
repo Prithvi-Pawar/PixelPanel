@@ -4,9 +4,9 @@
 import type { Media } from '@/lib/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Play, Heart, Share2, Download, X } from 'lucide-react';
+import { Play, Heart, Share2, Download, X, Image as ImageIcon, LayoutGrid } from 'lucide-react';
 import { YoutubeEmbed } from './youtube-embed';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from './ui/dialog';
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { OverviewTab } from './media/overview-tab';
@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from './ui/button';
 import type { UserProfile } from '@/app/profile/page';
 import { BentoShareImage } from './bento-share-image';
+import { MinimalShareImage } from './minimal-share-image';
 import { toPng } from 'html-to-image';
 
 
@@ -46,10 +47,14 @@ export function MediaDetailView({ media }: { media: Media }) {
   const [isLiked, setIsLiked] = useState(false);
   const { toast } = useToast();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  
   const bentoRef = useRef<HTMLDivElement>(null);
+  const minimalRef = useRef<HTMLDivElement>(null);
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isShareOptionsOpen, setIsShareOptionsOpen] = useState(false);
 
 
   useEffect(() => {
@@ -89,20 +94,25 @@ export function MediaDetailView({ media }: { media: Media }) {
     }
   };
 
-  const handleShare = async () => {
-    if (!bentoRef.current) return;
+  const generateImage = async (style: 'aesthetic' | 'minimal') => {
+    const targetRef = style === 'aesthetic' ? bentoRef : minimalRef;
+    if (!targetRef.current) return;
     
     setIsGenerating(true);
+    setIsShareOptionsOpen(false);
+
     try {
-        const dataUrl = await toPng(bentoRef.current, { 
+        const dataUrl = await toPng(targetRef.current, { 
             cacheBust: true,
             pixelRatio: 2,
-            style: {
+             style: {
                 opacity: '1',
                 transform: 'scale(1)',
                 position: 'relative',
                 top: '0',
-                left: '0'
+                left: '0',
+                right: '0',
+                bottom: '0'
             }
         });
         setPreviewImage(dataUrl);
@@ -118,6 +128,7 @@ export function MediaDetailView({ media }: { media: Media }) {
         setIsGenerating(false);
     }
   };
+
 
   const handleDownload = () => {
     if (!previewImage) return;
@@ -140,7 +151,28 @@ export function MediaDetailView({ media }: { media: Media }) {
             media={media} 
             user={userProfile || { name: 'Anonymous', avatarUrl: 'https://placehold.co/100x100.png', bio: '' }} 
         />
+        <MinimalShareImage ref={minimalRef} media={media} />
       </div>
+
+      <Dialog open={isShareOptionsOpen} onOpenChange={setIsShareOptionsOpen}>
+        <DialogContent className="bg-background/80 border-white/20 p-6 max-w-sm">
+            <DialogHeader>
+                <DialogTitle>Choose a Share Style</DialogTitle>
+                <DialogDescription>Select a style for your shareable image.</DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4 pt-4">
+                <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => generateImage('aesthetic')} disabled={isGenerating}>
+                    <LayoutGrid className="h-6 w-6" />
+                    Aesthetic
+                </Button>
+                <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => generateImage('minimal')} disabled={isGenerating}>
+                    <ImageIcon className="h-6 w-6" />
+                    Minimal
+                </Button>
+            </div>
+        </DialogContent>
+      </Dialog>
+
 
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <DialogContent className="bg-background/80 border-white/20 p-4 max-w-3xl">
@@ -245,7 +277,7 @@ export function MediaDetailView({ media }: { media: Media }) {
                               <Heart className={cn("h-5 w-5", isLiked && "fill-red-500 text-red-500")} />
                               <span className="sr-only">Like</span>
                           </Button>
-                          <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={handleShare} disabled={isGenerating}>
+                          <Button variant="outline" size="icon" className="rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20" onClick={() => setIsShareOptionsOpen(true)} disabled={isGenerating}>
                             {isGenerating ? <Download className="h-5 w-5 animate-pulse" /> : <Share2 className="h-5 w-5" />}
                               <span className="sr-only">Share</span>
                           </Button>
@@ -274,3 +306,5 @@ export function MediaDetailView({ media }: { media: Media }) {
     </>
   );
 }
+
+    

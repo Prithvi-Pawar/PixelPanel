@@ -1,3 +1,4 @@
+
 export function getYear() {
   return new Date().getFullYear();
 }
@@ -73,7 +74,15 @@ export function getDayOfWeek(date: Date): string {
   return date.toLocaleString('en-US', { weekday: 'long' });
 }
 
+export function getDayOfWeekFromDate(date: Date): string {
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    return days[date.getDay()];
+}
+
+
 export function formatAiringTime(timestamp: number): string {
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 }
+
+    
