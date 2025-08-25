@@ -53,7 +53,7 @@ export function WatchTab({ media }: { media: Media }) {
       </div>
       <Separator />
        <a
-          href="https://kawaiines.netlify.app/"
+          href="https://kawaiines.in/"
           target="_blank"
           rel="noopener noreferrer"
           className="group bg-card/50 p-4 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
