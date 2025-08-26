@@ -261,6 +261,9 @@ export function MediaDetailView({ media }: { media: Media }) {
                                   </Button>
                               </DialogTrigger>
                               <DialogContent className="bg-black/80 border-white/20 p-0 max-w-4xl">
+                                  <DialogHeader>
+                                    <DialogTitle className="sr-only">{media.title.userPreferred} Trailer</DialogTitle>
+                                  </DialogHeader>
                                   <YoutubeEmbed embedId={media.trailer.id} />
                               </DialogContent>
                               </Dialog>
@@ -306,5 +309,7 @@ export function MediaDetailView({ media }: { media: Media }) {
     </>
   );
 }
+
+    
 
     
