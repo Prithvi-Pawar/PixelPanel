@@ -53,7 +53,7 @@ export function EditProfileForm({ currentProfile, onSave, onCancel }: EditProfil
           <div className="col-span-3 flex items-center gap-4">
             <Image 
                 src={avatarPreview} 
-                alt="Avatar Preview" 
+                alt="Avatar Preview"
                 width={64} 
                 height={64} 
                 className="rounded-full object-cover" 

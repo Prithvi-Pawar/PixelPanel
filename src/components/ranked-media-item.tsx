@@ -24,9 +24,9 @@ export function RankedMediaItem({ media, rank }: RankedMediaItemProps) {
           sizes="56px"
         />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <Link href={`/media/${media.id}`}>
-          <h3 className="font-semibold text-base line-clamp-1 group-hover:text-primary transition-colors">{media.title.userPreferred}</h3>
+          <h3 className="font-semibold text-base truncate group-hover:text-primary transition-colors">{media.title.userPreferred}</h3>
         </Link>
         <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
           <span>{media.format}</span>
@@ -34,7 +34,7 @@ export function RankedMediaItem({ media, rank }: RankedMediaItemProps) {
           {media.averageScore && <><span>•</span><span>{media.averageScore}%</span></>}
         </div>
       </div>
-      <Link href={`/media/${media.id}`}>
+      <Link href={`/media/${media.id}`} className="ml-auto">
         <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
             <Eye className="mr-2 h-4 w-4" /> View
         </Button>

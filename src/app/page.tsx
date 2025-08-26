@@ -1,13 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { SlideButton } from '@/components/ui/slide-button';
 
 export default function LandingPage() {
   const [animationState, setAnimationState] = useState<'initial' | 'transitioning' | 'final'>('initial');
+  const [loadVideo, setLoadVideo] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Lazy load the video after the initial animation to improve performance
+    const timer = setTimeout(() => setLoadVideo(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleComplete = () => {
     setAnimationState('transitioning');
@@ -24,14 +31,16 @@ export default function LandingPage() {
       {animationState !== 'final' && (
         <div className="w-full h-full">
           <div className="absolute top-0 left-0 w-full h-full z-0">
-            <iframe
-              className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
-              src={`https://www.youtube.com/embed/zhDwjnYZiCo?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=zhDwjnYZiCo&start=50`}
-              title="YouTube video player background"
-              frameBorder="0"
-              allow="autoplay; encrypted-media; loop"
-              allowFullScreen={false}
-            ></iframe>
+            {loadVideo && (
+              <iframe
+                className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
+                src={`https://www.youtube.com/embed/zhDwjnYZiCo?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=zhDwjnYZiCo&start=50`}
+                title="YouTube video player background"
+                frameBorder="0"
+                allow="autoplay; encrypted-media; loop"
+                allowFullScreen={false}
+              ></iframe>
+            )}
           </div>
           <div className="absolute inset-0 bg-black/60 z-10" />
           <div className="relative z-20 flex flex-col items-center text-center text-white p-4 h-full justify-center">
