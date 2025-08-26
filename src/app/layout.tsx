@@ -1,30 +1,15 @@
 
+
 'use client';
 
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
-import { Poppins, Roboto_Mono, Playfair_Display } from 'next/font/google';
+import { poppins, robotoMono, playfairDisplay } from '@/lib/fonts';
 import { Sidebar } from '@/components/sidebar';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { usePathname } from 'next/navigation';
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-poppins',
-})
-
-const robotoMono = Roboto_Mono({
-  subsets: ['latin'],
-  variable: '--font-roboto-mono',
-})
-
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair-display',
-})
 
 // export const metadata: Metadata = {
 //   title: 'PixelPanel',
