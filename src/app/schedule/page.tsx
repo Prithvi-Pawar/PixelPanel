@@ -97,7 +97,6 @@ export default function SchedulePage() {
         {weekDays.map(day => (
           <Button
             key={day.toISOString()}
-            variant="ghost"
             onClick={() => setSelectedDay(day)}
             className={cn(
               "rounded-full px-4 py-2 h-auto text-sm font-semibold transition-colors",

@@ -11,7 +11,7 @@ import { MediaCard } from './media-card';
 interface ContentSliderProps {
   title: string;
   items: Media[];
-  type: 'anime' | 'manga';
+  type: 'anime';
 }
 
 export function ContentSlider({ title, items, type }: ContentSliderProps) {

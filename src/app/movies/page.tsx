@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
@@ -128,8 +127,6 @@ export default function MoviesPage() {
     return pages.map((p, index) => (
       <Button
         key={`${p}-${index}`}
-        variant={page === p ? 'default' : 'ghost'}
-        size="icon"
         onClick={() => typeof p === 'number' && setPage(p)}
         disabled={typeof p !== 'number'}
         className={`rounded-full ${page === p ? 'bg-primary' : 'bg-muted'}`}
@@ -180,7 +177,7 @@ export default function MoviesPage() {
               {YEARS.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button variant="ghost" size="icon" onClick={resetFilters}>
+          <Button className="variant-ghost size-icon" onClick={resetFilters}>
             <Trash2 className="h-5 w-5" />
           </Button>
         </div>
@@ -203,21 +200,17 @@ export default function MoviesPage() {
       {results.length > 0 && lastPage > 1 && (
         <div className="flex items-center justify-center gap-2">
           <Button
-            variant="ghost"
-            size="icon"
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="rounded-full"
+            className="rounded-full bg-transparent hover:bg-muted"
           >
             <ChevronLeft />
           </Button>
           {renderPagination()}
           <Button
-            variant="ghost"
-            size="icon"
             onClick={() => setPage(p => Math.min(lastPage, p + 1))}
             disabled={page === lastPage}
-            className="rounded-full"
+            className="rounded-full bg-transparent hover:bg-muted"
           >
             <ChevronRight />
           </Button>

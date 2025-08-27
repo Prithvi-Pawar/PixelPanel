@@ -21,7 +21,7 @@ export function CharacterCard({ character, role }: CharacterCardProps) {
         />
       </div>
       <h3 className="font-semibold text-sm">{character.name.full}</h3>
-      <Badge variant="secondary" className="mt-1 text-xs">{role}</Badge>
+      <Badge className="mt-1 text-xs">{role}</Badge>
     </div>
   );
 }

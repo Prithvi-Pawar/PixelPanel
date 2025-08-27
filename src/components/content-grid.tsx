@@ -4,7 +4,7 @@ import { MediaGrid } from './media-grid';
 interface ContentGridProps {
   title: string;
   items: Media[];
-  type: 'anime' | 'manga';
+  type: 'anime';
 }
 
 export function ContentGrid({ title, items, type }: ContentGridProps) {

@@ -40,7 +40,7 @@ export function OverviewTab({ media }: { media: Media }) {
             <h3 className="text-lg font-semibold mb-2 font-headline">Genres</h3>
             <div className="flex flex-wrap gap-2">
                 {media.genres.map(genre => (
-                    <Badge key={genre} variant="secondary" className="px-3 py-1 text-sm bg-white/10 text-white/80 backdrop-blur-sm">
+                    <Badge key={genre} className="px-3 py-1 text-sm bg-white/10 text-white/80 backdrop-blur-sm">
                         {genre}
                     </Badge>
                 ))}
