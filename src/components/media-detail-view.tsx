@@ -105,15 +105,16 @@ export function MediaDetailView({ media }: { media: Media }) {
         const dataUrl = await toPng(targetRef.current, { 
             cacheBust: true,
             pixelRatio: 2,
-             style: {
+            style: {
                 opacity: '1',
                 transform: 'scale(1)',
                 position: 'relative',
                 top: '0',
                 left: '0',
                 right: '0',
-                bottom: '0'
-            }
+                bottom: '0',
+                display: 'flex',
+             }
         });
         setPreviewImage(dataUrl);
         setIsPreviewOpen(true);
@@ -145,12 +146,12 @@ export function MediaDetailView({ media }: { media: Media }) {
 
   return (
     <>
-      <div style={{ position: 'fixed', top: '-2000px', left: '-2000px', opacity: 0 }}>
-        <BentoShareImage 
+      <div style={{ position: 'fixed', top: '-2000px', left: '-2000px', opacity: 0, zIndex: -100 }}>
+        {userProfile && <BentoShareImage 
             ref={bentoRef} 
             media={media} 
-            user={userProfile || { name: 'Anonymous', avatarUrl: 'https://placehold.co/100x100.png', bio: '' }} 
-        />
+            user={userProfile}
+        />}
         <MinimalShareImage ref={minimalRef} media={media} />
       </div>
 
@@ -309,7 +310,5 @@ export function MediaDetailView({ media }: { media: Media }) {
     </>
   );
 }
-
-    
 
     
