@@ -3,18 +3,18 @@ import type { Media } from '@/lib/types';
 import { Separator } from '../ui/separator';
 
 const platforms = [
-  { name: "Aniplay", key: "aniplay.lol", url: "https://aniplay.lol" },
+  { name: "Anidap", key: "anidap.se", url: "https://anidap.se" },
   { name: "ANIMEONSEN", key: "animeonsen.xyz", url: "https://animeonsen.xyz" },
   { name: "Enimoe", key: "enimoe.live", url: "https://enimoe.live" },
   { name: "Miruro", key: "miruro.to", url: "https://www.miruro.to" },
   { name: "Gojo.live", key: "gojo.live", url: "https://gojo.live" },
-  { name: "AniNow", key: "aninow.tv", url: "https://aninow.tv" },
+  { name: "Otakuu", key: "otakuu.se", url: "https://otakuu.se" },
 ];
 
 function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId: number, slug: string): string {
   switch (platformKey) {
-    case 'aniplay.lol':
-      return `${platformUrl}/anime/info/${anilistId}`;
+    case 'anidap.se':
+      return `${platformUrl}/info/${anilistId}`;
     case 'animeonsen.xyz':
       return platformUrl; // Links to homepage
     case 'enimoe.live':
@@ -23,8 +23,8 @@ function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId
       return `https://www.miruro.to/watch?id=${anilistId}`;
     case 'gojo.live':
        return `${platformUrl}/anime/${slug}`;
-    case 'aninow.tv':
-      return `https://aninow.tv/a/${slug}`;
+    case 'otakuu.se':
+      return `${platformUrl}/a/${slug}`;
     default:
       return platformUrl;
   }
