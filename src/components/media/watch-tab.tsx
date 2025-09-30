@@ -24,7 +24,7 @@ function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId
     case 'gojo.live':
        return `${platformUrl}/anime/${slug}`;
     case 'otakuu.se':
-      return `${platformUrl}/a/${slug}`;
+      return `${platformUrl}/anime/${anilistId}`;
     default:
       return platformUrl;
   }
