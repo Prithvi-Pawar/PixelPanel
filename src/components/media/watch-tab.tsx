@@ -4,7 +4,7 @@ import { Separator } from '../ui/separator';
 
 const platforms = [
   { name: "Anidap", key: "anidap.se", url: "https://anidap.se" },
-  { name: "Anisnatch", key: "anisnatch.p1y.top", url: "https://anisnatch.p1y.top" },
+  { name: "Anisnatch", key: "anisnatch.p1y.top", url: "https://anisnatch.p1y.top/home" },
   { name: "ANIMEONSEN", key: "animeonsen.xyz", url: "https://animeonsen.xyz" },
   { name: "Miruro", key: "miruro.to", url: "https://www.miruro.to" },
   { name: "Gojo.live", key: "gojo.live", url: "https://gojo.live" },
@@ -16,7 +16,7 @@ function generatePlatformUrl(platformKey: string, platformUrl: string, anilistId
     case 'anidap.se':
       return `${platformUrl}/info/${anilistId}`;
     case 'anisnatch.p1y.top':
-      return `${platformUrl}/watch/${anilistId}?ep=1`;
+      return platformUrl; // Links to homepage
     case 'animeonsen.xyz':
       return platformUrl; // Links to homepage
     case 'miruro.to':
