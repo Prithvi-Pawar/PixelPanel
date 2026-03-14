@@ -34,11 +34,11 @@ export default function LandingPage() {
             {loadVideo && (
               <iframe
                 className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
-                // src={`https://www.youtube.com/embed/zhDwjnYZiCo?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=zhDwjnYZiCo`}
-                src={`https://youtu.be/LAccGjpX1Ow?si=WO35PXKty_OmZC6j`}
-                title="YouTube video player background"
+                src="https://www.youtube.com/embed/VNUrbq5kk4U?si=xR2ZpbTsoshMvuTG&start=31&autoplay=1&mute=1&loop=1&playlist=VNUrbq5kk4U"
+                title="YouTube video player"
                 frameBorder="0"
-                allow="autoplay; encrypted-media; loop"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen={false}
               ></iframe>
             )}
