@@ -32,15 +32,15 @@ export default function LandingPage() {
         <div className="w-full h-full">
           <div className="absolute top-0 left-0 w-full h-full z-0">
             {loadVideo && (
-              <iframe
-                className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[1.2]"
-                src="https://www.youtube.com/embed/VNUrbq5kk4U?si=xR2ZpbTsoshMvuTG&start=31&autoplay=1&mute=1&loop=1&playlist=VNUrbq5kk4U"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen={false}
-              ></iframe>
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover"
+              >
+                <source src="/assets/background-video.mp4" type="video/mp4" />
+              </video>
             )}
           </div>
           <div className="absolute inset-0 bg-black/60 z-10" />
